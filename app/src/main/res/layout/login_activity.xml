@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
+    android:background="@color/colorPrimary">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".User.LoginActivity">
+
+    <!--<android.support.v4.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/"
+        />-->
+    <android.support.v7.widget.TextInputLayout
+        android:id="@+id/user_email_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        android:layout_marginTop="40dp"/>
+
+    <android.support.v7.widget.TextInputEditText
+        android:id="@+id/user_email_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:hint="@string/email"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textColor="@android:color/white"/>
+
+    <android.support.v7.widget.TextInputLayout
+        android:id="@+id/password_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/password" />
+
+    <android.support.v7.widget.TextInputEditText
+        android:id="@+id/password_Input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:maxLines="1"
+        android:textColor="@android:color/holo_blue_light"
+        android:inputType="textPassword"
+        android:text="@string/password" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:textSize="16dp"
+        android:text="@string/login_button" />
+
+    <android.support.v7.widget.AppCompatTextView android:id="@+id/register_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="@string/noUser"
+        android:textSize="16dp"
+        />
+</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

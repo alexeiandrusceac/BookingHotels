@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">BookingHotels</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="user_name">Numele</string>
+    <string name="user_prename">Prenumele</string>
+    <string name="password">Parola </string>
+    <string name="email">Email</string>
+    <string name="login_button">Logheaza-te</string>
+    <string name="register_button">Inregistreaza-te</string>
+    <string name="hotels">Hoteluri</string>
+    <string name="noUser">Nu aveti cont? Creati unul</string>
+    <string name="error_email">Introduceti o adresa de email valida</string>
+    <string name="error_name">Introduceti numele</string>
+    <string name="error_prename">Introduceti prenumele</string>
+    <string name="error_password">Introduceti parola</string>
+    <string name="error_email_password">Introduceti email si parola</string>
+    <!--<string name="hostels">Hosteluri</string>
+    <string name="motels">Moteluri</string>
+    <string name="appartaments">Apartamente in chirie</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>-->
+    <string name="login">Logare</string>
+</resources>
