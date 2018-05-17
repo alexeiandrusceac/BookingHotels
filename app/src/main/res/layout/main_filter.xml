@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearFilter"
+    android:layout_width="369dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!--Type Filter-->
+    <TextView
+        android:id="@+id/type_View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:scaleType="center"
+        android:text="@string/type" />
+
+    <Spinner
+        android:id="@+id/list_Of_Type"
+        android:spinnerMode="dropdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </Spinner>
+    <!--Type Filter-->
+    <!--Rating Filter-->
+    <TextView
+        android:id="@+id/rating_View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:scaleType="center"
+        android:text="@string/rating" />
+
+    <RatingBar
+        android:id="@+id/rating_Bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbarSize="10dp"/>
+
+    <!--Rating Filter-->
+
+    <!--Price Filter-->
+    <TextView
+        android:id="@+id/from_Price_View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fromPrice" />
+
+    <EditText
+        android:id="@+id/from_Price_Input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/fromPrice" />
+
+    <TextView
+        android:id="@+id/to_Price_View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toPrice" />
+
+    <EditText
+        android:id="@+id/to_Price_Input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/toPrice" />
+    <!--Price Filter-->
+
+</LinearLayout>

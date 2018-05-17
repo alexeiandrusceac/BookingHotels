@@ -1,4 +1,4 @@
-package com.bookinghotels.app.FragmentsMap.User;
+package com.bookinghotels.app.MainActivity.User;
 
 import android.app.Activity;
 import android.support.design.widget.TextInputEditText;

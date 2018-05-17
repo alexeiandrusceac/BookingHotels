@@ -7,17 +7,18 @@
     <string name="email">Email</string>
     <string name="login_button">Logheaza-te</string>
     <string name="register_button">Inregistreaza-te</string>
-    <string name="hotels">Hoteluri</string>
     <string name="noUser">Nu aveti cont? Creati unul</string>
     <string name="error_email">Introduceti o adresa de email valida</string>
     <string name="error_name">Introduceti numele</string>
     <string name="error_prename">Introduceti prenumele</string>
     <string name="error_password">Introduceti parola</string>
     <string name="error_email_password">Introduceti email si parola</string>
-    <!--<string name="hostels">Hosteluri</string>
-    <string name="motels">Moteluri</string>
-    <string name="appartaments">Apartamente in chirie</string>
-    <string name="navigation_drawer_open">Open</string>
-    <string name="navigation_drawer_close">Close</string>-->
-    <string name="login">Logare</string>
+    <string name="conf_password">Confirmati parola</string>
+    <string name="error_password_match">Nu se conincide cu parola de confirmare</string>
+    <string name="search_house">Cautare locuinte</string>
+    <string name="type">Tipul locuintei</string>
+    <string name="rating">Apreciere</string>
+    <string name="fromPrice">De la suma</string>
+    <string name="toPrice">Pina la suma</string>
+
 </resources>
