@@ -1,4 +1,4 @@
-package com.bookinghotels.app.MainActivity.User;
+package com.bookinghotels.app.mainActivity.User;
 
 public class User {
     public String Name;

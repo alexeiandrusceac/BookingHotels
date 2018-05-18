@@ -1,4 +1,4 @@
-package com.bookinghotels.app.MainActivity.User.Database;
+package com.bookinghotels.app.mainActivity.User.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.bookinghotels.app.MainActivity.Buildings.Buildings;
-import com.bookinghotels.app.MainActivity.Type;
-import com.bookinghotels.app.MainActivity.User.User;
+import com.bookinghotels.app.mainActivity.Buildings.Buildings;
+import com.bookinghotels.app.mainActivity.Type;
+import com.bookinghotels.app.mainActivity.User.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +55,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     //Tabelul cu tipuri de locuinte
 
     private SQLiteDatabase sqLiteDatabase;
+
     public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -63,7 +64,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     private String CREATE_BUILDING_TABLE = "CREATE TABLE " + BUILDING_TABLE_NAME + "(" + BUILDING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + BUILDING_TITLE + " TEXT," + BUILDING_ADDRESS + " TEXT," +
-            BUILDING_RATING + " FLOAT, " +  BUILDING_PRICE + "FLOAT" + ")";
+            BUILDING_RATING + " FLOAT, " + BUILDING_PRICE + "FLOAT" + ")";
     private String CREATE_USER_TABLE = "CREATE TABLE " + USER_TABLE_NAME + "(" + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + USER_NAME + " TEXT," + USER_PRENAME
             + " TEXT," + USER_EMAIL + " TEXT," + USER_PASSWORD + " TEXT" + ")";
     private String CREATE_TYPE_TABLE = "CREATE TABLE " + TYPE_TABLE_NAME + "(" + TYPE_ID + "INTEGER PRIMARY KEY AUTOINCREMENT," + TYPE_TITLE + "TEXT" + ")";
@@ -73,7 +74,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + USER_TABLE_NAME;
     private String DROP_BUILDING_TABLE = "DROP TABLE IF EXISTS " + BUILDING_TABLE_NAME;
-    private String DROP_TYPE_TABLE = "DROP TABLE IF EXISTS "+ TYPE_TABLE_NAME;
+    private String DROP_TYPE_TABLE = "DROP TABLE IF EXISTS " + TYPE_TABLE_NAME;
     /***************************************************************STERGEREA TABELELOR*****************************************************************************************/
 
 
@@ -91,7 +92,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         return false;
     }
-
+    public boolean checkUserOnLogin(String email) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.query(USER_TABLE_NAME,
+                new String[]{USER_ID},
+                USER_EMAIL + " =?",
+                new String[]{email},
+                null, null, USER_ID);
+        cursor.close();
+        if (cursor.getCount() > 0) {
+            return true;
+        }
+        return false;
+    }
     public void registerNewUser(User user) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -121,11 +134,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     /*************************************************************************HOTELS ACTIONS*********************************************************/
-    public List<Buildings> getHotels() {
+    public List<Buildings> getBuildings() {
         List<Buildings> listOfBuilding = new ArrayList<>();
 
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM BuildingsTable", null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + BUILDING_TABLE_NAME, null);
         if (cursor.moveToFirst()) {
             do {
                 Buildings buildings = new Buildings();
@@ -133,11 +146,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 buildings.Title = cursor.getString(1);
                 buildings.Rating = cursor.getFloat(2);
                 buildings.Address = cursor.getString(3);
-
-                buildings.Room = cursor.getInt(4);
-                buildings.Price = cursor.getFloat(5);
-                buildings.MaxPers = cursor.getInt(6);
-                buildings.Type = cursor.getString(7);
+                buildings.Price = cursor.getFloat(4);
+                buildings.Type = cursor.getString(5);
 
                 listOfBuilding.add(buildings);
             }
@@ -148,23 +158,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return listOfBuilding;
 
     }
-    public void insertHotels()
-    {
-        ContentValues values = new ContentValues();
-        values.put("Title","");
-        values.put("Rating","");
-        values.put("Address","");
-        values.put("Price","");
-        values.put("Type","");
 
-        sqLiteDatabase.insert("BuildingsTable",null,values);
+    public void insertBuilding(String title, String rating, String address, String price, String type) {
+        ContentValues values = new ContentValues();
+        values.put(BUILDING_TITLE, title);
+        values.put(BUILDING_RATING, rating);
+        values.put(BUILDING_ADDRESS, address);
+        values.put(BUILDING_PRICE, price);
+        values.put(BUILDING_TYPE, type);
+
+        sqLiteDatabase.insert(BUILDING_TABLE_NAME, null, values);
         sqLiteDatabase.close();
     }
+
     public List<Buildings> getHotelsByFilter(Buildings bFilter) {
         List<Buildings> listOfBuilding = new ArrayList<>();
 
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM BuildingsTable WHERE Type = ? ", new String[]{bFilter.Type});
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + BUILDING_TABLE_NAME + " WHERE Type = ? ", new String[]{bFilter.Type});
         if (cursor.moveToFirst()) {
             do {
                 Buildings buildings = new Buildings();
@@ -172,11 +183,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 buildings.Title = cursor.getString(1);
                 buildings.Rating = cursor.getFloat(2);
                 buildings.Address = cursor.getString(3);
-
-                buildings.Room = cursor.getInt(4);
-                buildings.Price = cursor.getFloat(5);
-                buildings.MaxPers = cursor.getInt(6);
-                buildings.Type = cursor.getString(7);
+                buildings.Price = cursor.getFloat(4);
+                buildings.Type = cursor.getString(5);
 
                 listOfBuilding.add(buildings);
             }
@@ -191,15 +199,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     /*************************************************************************TYPE ACTIONS*********************************************************/
+    public void insertType(String type) {
+        ContentValues values = new ContentValues();
+        values.put(TYPE_TITLE, type);
+    sqLiteDatabase.insert(TYPE_TABLE_NAME,null,values);
+    sqLiteDatabase.close();
+    }
 
-    public List<Type> getAllTypes()
-    {
-        List<Type> listOfType= new ArrayList<>();
+    public List<Type> getAllTypes() {
+        List<Type> listOfType = new ArrayList<>();
 
-        Cursor cursorType = sqLiteDatabase.rawQuery("SELECT * FROM TypeTable",null);
-        if(cursorType.moveToFirst())
-        {
-            do{
+        Cursor cursorType = sqLiteDatabase.rawQuery("SELECT * FROM " + TYPE_TABLE_NAME, null);
+        if (cursorType.moveToFirst()) {
+            do {
                 Type type = new Type();
                 type.IDType = cursorType.getInt(0);
                 type.Type = cursorType.getString(1);
@@ -207,8 +219,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 listOfType.add(type);
 
             }
-            while(cursorType.moveToNext());
-                sqLiteDatabase.close();
+            while (cursorType.moveToNext());
+            sqLiteDatabase.close();
         }
         return listOfType;
 

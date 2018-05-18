@@ -1,4 +1,4 @@
-package com.bookinghotels.app.MainActivity.User;
+package com.bookinghotels.app.mainActivity.User;
 
 import android.app.Activity;
 import android.support.design.widget.TextInputEditText;

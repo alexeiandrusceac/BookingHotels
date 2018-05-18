@@ -20,5 +20,6 @@
     <string name="rating">Apreciere</string>
     <string name="fromPrice">De la suma</string>
     <string name="toPrice">Pina la suma</string>
-
+    <string name="success_message">Inregistrarea s-a salvat cu succes</string>
+    <string name="error_email_exists">Deja exista cu asa adresa de email</string>
 </resources>

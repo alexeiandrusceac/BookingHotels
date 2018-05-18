@@ -1,4 +1,4 @@
-package com.bookinghotels.app.MainActivity.User;
+package com.bookinghotels.app.mainActivity.User;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 
-import com.bookinghotels.app.MainActivity.User.Database.DataBaseHelper;
+import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
 import com.bookinghotels.app.R;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
@@ -62,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void registerUser(){
+    private void registerUser() {
         if (!valUserData.textFilled(nameInput, nameInputLayout, getString(R.string.error_name))) {
             return;
         }
@@ -82,17 +82,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         if (!userDBHelper.checkUserOnLogin(emailInput.getText().toString().trim())) {
 
-            user.setName(nameInput.getText().toString().trim());
-            user.setEmail(emailInput.getText().toString().trim());
-            user.setPassword(passwordInput.getText().toString().trim());
+            userData.Name = nameInput.getText().toString().trim();
+            userData.Email = emailInput.getText().toString().trim();
+            userData.Password = passwordInput.getText().toString().trim();
 
-            userDBHelper.addUser(user);
+            userDBHelper.registerNewUser(userData);
 
             // Snack Bar to show success message that record saved successfully
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-            emptyInputEditText();
-
-
+            emailInput.setText(null);
+            nameInput.setText(null);
         } else {
             // Snack Bar to show error message that record already exists
             Snackbar.make(scrollView, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();

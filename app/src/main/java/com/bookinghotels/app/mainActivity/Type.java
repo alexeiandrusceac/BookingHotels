@@ -1,4 +1,4 @@
-package com.bookinghotels.app.MainActivity;
+package com.bookinghotels.app.mainActivity;
 
 public class Type {
     public int IDType;

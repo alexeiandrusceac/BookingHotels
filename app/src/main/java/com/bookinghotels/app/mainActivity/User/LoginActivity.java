@@ -1,4 +1,4 @@
-package com.bookinghotels.app.MainActivity.User;
+package com.bookinghotels.app.mainActivity.User;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
-import com.bookinghotels.app.MainActivity.User.Database.DataBaseHelper;
+import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
 
 import com.bookinghotels.app.R;
 
@@ -77,7 +77,7 @@ private DataBaseHelper userDBHelper;
 
         if(userDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(),passwordInputEditText.getText().toString().trim()))
         {
-            Intent accountIntent = new Intent(compatActivity, UserListActivity.class);
+            Intent accountIntent = new Intent(compatActivity, User.class);
             accountIntent.putExtra("EMAIL",nameInputEditText.getText().toString().trim());
             nameInputEditText.setText(null);
             passwordInputEditText.setText(null);
