@@ -3,10 +3,6 @@ package com.bookinghotels.app.mainActivity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,27 +13,26 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.bookinghotels.app.R;
-import com.bookinghotels.app.mainActivity.Buildings.Buildings;
+import com.bookinghotels.app.mainActivity.Hotels.Hotels;
+import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.StringBufferInputStream;
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-    static List<Buildings> dbList;
+    static List<Hotels> dbList;
     private DatePickerDialog datePicker;
     private static DataBaseHelper dataBaseHelper;
     static Context context;
-    RecyclerAdapter(Context context, List<Buildings> dbList ){
-        this.dbList = new ArrayList<Buildings>();
+    RecyclerAdapter(Context context, List<Hotels> dbList ){
+        this.dbList = new ArrayList<Hotels>();
         this.context = context;
         this.dbList = dbList;
     }
@@ -51,10 +46,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 String build = ((TextView)v.findViewById(R.id.titleView)).getText().toString();
-                String checkin = ((TextView)v.findViewById(R.id.checkInView)).getText().toString();
-                String checkout = ((TextView)v.findViewById(R.id.checkOutView)).getText().toString();
 
-                showReservationDialog(build,checkin,checkout);
+                showReservationDialog(build);
             }
         });
 
@@ -69,21 +62,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         ViewHolder viewHolder = new ViewHolder(itemLayoutView);
         return viewHolder;
     }
-    private void showReservationDialog(String build,String checkIn,String checkOut){
+    private void showReservationDialog(String build/*,String checkIn,String checkOut*/){
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View reservationView = layoutInflater.inflate(R.layout.reservation_main,null,false);
 
         final TextView buildTitle = (TextView)reservationView.findViewById(R.id.titleReservation);
         final EditText nameInput = (EditText)reservationView.findViewById(R.id.nameEditAutoFill);
         final EditText prenameInput = (EditText)reservationView.findViewById(R.id.prenameEditAFill);
-        final EditText emailInput = (EditText)reservationView.findViewById(R.id.emailEditAFill);
+        final EditText emailInput = (EditText)reservationView.findViewById(R.id.addressEditAFill);
         final EditText fromDateInput = (EditText)reservationView.findViewById(R.id.nightDayFrom);
         final EditText toDateInput = (EditText)reservationView.findViewById(R.id.nightDayTo);
         final EditText maxPers= (EditText)reservationView.findViewById(R.id.personEditAFill);
 
         buildTitle.setText(context.getResources().getString(R.string.reservationText) +" la "+ build);
-        nameInput.setText("VANEA");
-        nameInput.setBackgroundColor(Color.YELLOW);
+        //nameInput.setText("VANEA");
+       // nameInput.setBackgroundColor(Color.YELLOW);
         /*prenameInput.setText();
         emailInput.setText();
 */
@@ -131,12 +124,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         holder.title.setText(dbList.get(position).Title);
         holder.addres.setText(dbList.get(position).Address);
+        holder.zip.setText(dbList.get(position).Zip);
         holder.rating.setText(String.valueOf(dbList.get(position).Rating));
         holder.price.setText(String.valueOf(dbList.get(position).Price));
-        holder.type.setText(dbList.get(position).Type);
-        holder.checkIn.setText(dbList.get(position).CheckIn);
-        holder.checkOut.setText(dbList.get(position).CheckOut);
         holder.image.setImageResource(dbList.get(position).Image);
+        holder.phone.setText(dbList.get(position).Phone);
     }
 
     @Override
@@ -146,20 +138,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView title,addres,rating,price,type,checkIn,checkOut;
+        public TextView title,addres,rating,price,phone,zip;
         public ImageView image;
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
             title = (TextView) itemLayoutView
                     .findViewById(R.id.titleView);
+            zip = (TextView)itemLayoutView.findViewById(R.id.zipView);
             addres = (TextView)itemLayoutView.findViewById(R.id.addressView);
             rating = (TextView)itemLayoutView.findViewById(R.id.ratingView);
             price = (TextView)itemLayoutView.findViewById(R.id.priceView);
-            type = (TextView)itemLayoutView.findViewById(R.id.typeView);
-            checkIn = (TextView)itemLayoutView.findViewById(R.id.checkInView);
-            checkOut =(TextView)itemLayoutView.findViewById(R.id.checkOutView);
             image = (ImageView)itemLayoutView.findViewById(R.id.imageView);
-          //  itemLayoutView.setOnClickListener(this);
+            phone = (TextView)itemLayoutView.findViewById(R.id.phoneView);
+
 
         }
 

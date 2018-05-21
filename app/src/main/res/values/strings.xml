@@ -29,4 +29,12 @@
     <string name="night_Days">Numarul de nopti</string>
     <string name="reservationText">Rezervare</string>
     <string name="image">Imagine</string>
+    <string name="loadImage">Incarcati imaginea</string>
+    <string name="checkIn">Check in</string>
+    <string name="checkOut">Check out</string>
+    <string name="room">Nr. de camere:</string>
+    <string name="action_settings">Settings</string>
+    <string name="phone">Nr. telefon:</string>
+    <string name="zip">Cod postal:</string>
+
 </resources>

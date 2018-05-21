@@ -12,15 +12,14 @@
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
-            android:layout_width="match_parent"
-            android:background="#f2f2f2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp">
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="1200px"
-                android:layout_height="500px"/>
+                android:layout_height="300px"/>
 
             <TextView
                 android:id="@+id/titleLabel"
@@ -36,7 +35,8 @@
                 android:textColor="#808080"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/titleLabel"/>
+                android:layout_below="@id/titleLabel"
+                android:layout_alignLeft="@id/titleLabel"/>
 
             <TextView
                 android:id="@+id/ratingLabel"
@@ -45,16 +45,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rating"
-                android:layout_below="@+id/titleView"
-                android:layout_alignLeft="@+id/titleView"/>
+                android:layout_below="@id/titleView"
+                android:layout_alignLeft="@id/titleView"/>
 
             <TextView
                 android:id="@+id/ratingView"
                 android:textColor="#808080"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ratingLabel"
-                android:layout_alignLeft="@+id/ratingLabel"/>
+                android:layout_below="@id/ratingLabel"
+                android:layout_alignLeft="@id/ratingLabel"/>
 
             <TextView
                 android:id="@+id/addressLabel"
@@ -63,16 +63,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/address"
-                android:layout_below="@+id/ratingView"
-                android:layout_alignLeft="@+id/ratingView"/>
+                android:layout_below="@id/ratingView"
+                android:layout_alignLeft="@id/ratingView"/>
 
             <TextView
                 android:id="@+id/addressView"
                 android:textColor="#808080"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/addressLabel"
-                android:layout_alignLeft="@+id/addressLabel"/>
+                android:layout_below="@id/addressLabel"
+                android:layout_alignLeft="@id/addressLabel"/>
 
             <TextView
                 android:id="@+id/priceLabel"
@@ -83,66 +83,55 @@
                 android:text="@string/price"
                 android:layout_below="@+id/addressView"
                 android:layout_alignLeft="@+id/addressView"/>
-
             <TextView
                 android:id="@+id/priceView"
                 android:textColor="#808080"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/priceLabel"
-                android:layout_alignLeft="@+id/priceLabel"/>
+                android:layout_below="@id/priceLabel"
+                android:layout_alignLeft="@id/priceLabel"
+                />
 
             <TextView
-                android:id="@+id/typeLabel"
+                android:id="@+id/phoneLabel"
                 android:textColor="#000000"
                 android:textSize="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/type"
-                android:layout_below="@+id/priceView"
-                android:layout_alignLeft="@+id/priceView"/>
+                android:text="@string/phone"
+                android:layout_below="@id/priceView"
+                android:layout_alignLeft="@id/priceView"/>
 
             <TextView
-                android:id="@+id/typeView"
+                android:id="@+id/phoneView"
                 android:textColor="#808080"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/typeLabel"
-                android:layout_alignLeft="@+id/typeLabel"/>
+                android:layout_below="@id/phoneLabel"
+                android:layout_alignLeft="@id/phoneLabel"/>
 
-            <TextView
-                android:id="@+id/checkInLabel"
-                android:textColor="#000000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title"
-                android:visibility="invisible"
-                android:textSize="16dp"/>
+             <TextView
+                 android:id="@+id/zipLabel"
+                 android:textColor="#000000"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="@string/zip"
+                 android:textSize="16dp"
+                 android:layout_below="@id/phoneView"
+                 android:layout_alignLeft="@id/phoneView"/>
 
-            <TextView
-                android:id="@+id/checkInView"
-                android:textColor="#000000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title"
-                android:visibility="invisible"/>
+             <TextView
+                 android:id="@+id/zipView"
+                 android:textColor="#000000"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@id/zipLabel"
+                 android:layout_alignLeft="@id/zipLabel"
+                />
 
-            <TextView
-                android:id="@+id/checkOutLabel"
-                android:textColor="#000000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title"
-                android:visibility="invisible"
-                android:textSize="16dp"/>
-
-            <TextView
-                android:id="@+id/checkOutView"
-                android:textColor="#000000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title"
-                android:visibility="invisible"/>
 
         </RelativeLayout>
+
+
+
     </android.support.v7.widget.CardView>
