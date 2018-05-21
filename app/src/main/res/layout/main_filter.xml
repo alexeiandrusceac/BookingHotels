@@ -43,25 +43,27 @@
         android:id="@+id/from_Price_View"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fromPrice" />
+        android:text="@string/from_Price" />
 
     <EditText
         android:id="@+id/from_Price_Input"
+        android:inputType="number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/fromPrice" />
+        android:hint="@string/from_Price" />
 
     <TextView
         android:id="@+id/to_Price_View"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/toPrice" />
+        android:text="@string/to_Price" />
 
     <EditText
         android:id="@+id/to_Price_Input"
+        android:inputType="number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/toPrice" />
+        android:hint="@string/to_Price" />
     <!--Price Filter-->
 
 </LinearLayout>

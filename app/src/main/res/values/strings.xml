@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">BookingHotels</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="user_name">Numele</string>
-    <string name="user_prename">Prenumele</string>
-    <string name="password">Parola </string>
-    <string name="email">Email</string>
+    <string name="user_name">Numele:</string>
+    <string name="user_prename">Prenumele:</string>
+    <string name="password">Parola:</string>
+    <string name="email">Email:</string>
     <string name="login_button">Logheaza-te</string>
     <string name="register_button">Inregistreaza-te</string>
-    <string name="noUser">Nu aveti cont? Creati unul</string>
+    <string name="no_User">Nu aveti cont? Creati unul</string>
     <string name="error_email">Introduceti o adresa de email valida</string>
     <string name="error_name">Introduceti numele</string>
     <string name="error_prename">Introduceti prenumele</string>
@@ -16,10 +15,18 @@
     <string name="conf_password">Confirmati parola</string>
     <string name="error_password_match">Nu se conincide cu parola de confirmare</string>
     <string name="search_house">Cautare locuinte</string>
-    <string name="type">Tipul locuintei</string>
-    <string name="rating">Apreciere</string>
-    <string name="fromPrice">De la suma</string>
-    <string name="toPrice">Pina la suma</string>
+    <string name="type">Tipul locuintei:</string>
+    <string name="rating">Apreciere:</string>
+    <string name="from_Price">De la suma:</string>
+    <string name="to_Price">Pina la suma:</string>
     <string name="success_message">Inregistrarea s-a salvat cu succes</string>
     <string name="error_email_exists">Deja exista cu asa adresa de email</string>
+    <string name="title">Denumire:</string>
+    <string name="address">Adresa:</string>
+    <string name="price">Pretul:</string>
+    <string name="post_View">Ofera</string>
+    <string name="nr_Persons">Numarul de persoane</string>
+    <string name="night_Days">Numarul de nopti</string>
+    <string name="reservationText">Rezervare</string>
+    <string name="image">Imagine</string>
 </resources>

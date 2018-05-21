@@ -1,9 +1,9 @@
 package com.bookinghotels.app.mainActivity.User;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.content.Context;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;

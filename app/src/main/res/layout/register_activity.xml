@@ -9,6 +9,19 @@
     android:paddingLeft="20dp"
     android:paddingBottom="20dp"
     >
+    <!--<android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:id="@+id/register_appBarLayout"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/register_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            />
+    </android.support.design.widget.AppBarLayout>-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

@@ -2,6 +2,7 @@ package com.bookinghotels.app.mainActivity.User;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -9,11 +10,11 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
-
 import com.bookinghotels.app.R;
+import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 private final AppCompatActivity compatActivity = LoginActivity.this;
@@ -26,7 +27,8 @@ private AppCompatButton loginButton;
 private AppCompatTextView registerLink;
 private ValidationUserInputData valUserInput;
 private DataBaseHelper userDBHelper;
-
+private AppBarLayout appBarLayout;
+private Toolbar toolbar;
 @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -42,6 +44,10 @@ private DataBaseHelper userDBHelper;
         passwordInputEditText = (TextInputEditText) findViewById(R.id.password_Input);
         loginButton = (AppCompatButton) findViewById(R.id.login_button);
         registerLink = (AppCompatTextView) findViewById(R.id.register_text_view);
+        //appBarLayout = (AppBarLayout)findViewById(R.id.login_appBarLayout);
+        //toolbar = (Toolbar)findViewById(R.id.login_toolbar);
+
+       // setSupportActionBar(toolbar);
         // Initializarea Listeners
         loginButton.setOnClickListener(this);
         registerLink.setOnClickListener(this);

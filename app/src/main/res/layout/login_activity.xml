@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_height="match_parent"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:paddingBottom="20dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:paddingTop="20dp"
-    >
+    android:paddingTop="20dp">
+
+    <!--<android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:id="@+id/login_appBarLayout"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/login_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+             />
+    </android.support.design.widget.AppBarLayout>-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -54,7 +69,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:gravity="center"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:text="@string/login_button" />
 
     <android.support.v7.widget.AppCompatTextView
@@ -63,8 +78,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="@string/noUser"
-        android:textSize="16dp"
+        android:text="@string/no_User"
+        android:textSize="16sp"
         />
 </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

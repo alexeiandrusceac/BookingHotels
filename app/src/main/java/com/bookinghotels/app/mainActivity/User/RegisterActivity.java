@@ -1,16 +1,18 @@
 package com.bookinghotels.app.mainActivity.User;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
 import com.bookinghotels.app.R;
+import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private final AppCompatActivity compatActivity = RegisterActivity.this;
@@ -25,8 +27,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextInputEditText passwordInput;
     private TextInputLayout confPasswordInputLayout;
     private TextInputEditText confPasswd;
-
-
+private Toolbar toolbar;
+    private AppBarLayout appBarLayout;
     private AppCompatButton registerButton;
     private ValidationUserInputData valUserData;
     private DataBaseHelper userDBHelper;
@@ -44,12 +46,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         passwordInputLayout = (TextInputLayout) findViewById(R.id.password_layout);
         confPasswordInputLayout = (TextInputLayout) findViewById(R.id.user_confpass_layout);
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
-
+        //appBarLayout= (AppBarLayout)findViewById(R.id.register_appBarLayout);
+        ///toolbar = (Toolbar)findViewById(R.id.register_toolbar);
+        //setSupportActionBar(toolbar);
         ///Initializarea listeners
         registerButton.setOnClickListener(this);
         valUserData = new ValidationUserInputData(compatActivity);
         userDBHelper = new DataBaseHelper(compatActivity);
-        userData = new User();
+
 
     }
 

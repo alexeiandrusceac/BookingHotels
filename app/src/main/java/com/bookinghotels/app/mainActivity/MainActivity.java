@@ -1,80 +1,110 @@
 package com.bookinghotels.app.mainActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.preference.DialogPreference;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Buildings.Buildings;
 import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
-import com.bookinghotels.app.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
     private static SearchView searchFilter;
     private static DataBaseHelper dbHelper;
     private static List<Buildings> listOfBuilds = new ArrayList<>();
     private static CardView cardView;
     private static Button filterButton;
-
+    private FloatingActionButton floatingButton;
+    private RelativeLayout relativeLayoutWithCards;
+    private RecyclerAdapter adapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private TextView postView;
+    private DatePickerDialog datePicker;
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        postView =(TextView)findViewById(R.id.postView);
+        Toolbar toolbar =(Toolbar)findViewById(R.id.main_app_toolbar);
+
         setContentView(R.layout.main_activity);
-        searchFilter = (SearchView) findViewById(R.id.searchViewFilter);
-        filterButton = (Button) findViewById(R.id.buttonFilter);
-        insertData();
+
+        //searchFilter = (SearchView) findViewById(R.id.searchViewFilter);
+        floatingButton = (FloatingActionButton)findViewById(R.id.floatingButton);
+        //linearLayoutWithCards = (LinearLayout)findViewById(R.id.linearLayoutWithCards);
+        //cardView = (CardView)findViewById(R.id.cardView);
+        dbHelper= new DataBaseHelper(this);
+       // filterButton = (Button) findViewById(R.id.buttonFilter);
+
         listOfBuilds = dbHelper.getBuildings();
-        filterButton.setOnClickListener(new View.OnClickListener() {
+       /* filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFilterDialog(v);
             }
+        });*/
+
+        setSupportActionBar(toolbar);
+
+        recyclerView =  (RecyclerView)findViewById(R.id.recycleview);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new RecyclerAdapter(MainActivity.this,listOfBuilds);
+        recyclerView.setAdapter(adapter);
+
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPostDialog();
+            }
         });
-
     }
+       private void showPostDialog()
+       {
+           LayoutInflater layoutInflater = (LayoutInflater)MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+           final View postView = layoutInflater.inflate(R.layout.post_main,null,false);
+          // final EditText buildTitle =  (EditText)postView.findViewById(R.id.)
+           new AlertDialog.Builder(MainActivity.this).setView(postView).setCancelable(false).setPositiveButton(
+                   "Posteaza", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                            //dbHelper.insertBuilding();
+                       }
+                   }
+           ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialog, int which) {
 
-    private void insertData() {
-        dbHelper = new DataBaseHelper(MainActivity.this);
-
-        dbHelper.insertBuilding("Hotelul Codru", "4,99", "Vlaicu Pircalab 56", "150", "hotel");
-        dbHelper.insertBuilding("Hotelul National", "5,00", "Grigore Vieru 34", "375", "hotel");
-        dbHelper.insertBuilding("Hotelul Grand Palace", "4,89", "Vasile Alexandri 57", "275", "hotel");
-        dbHelper.insertBuilding("Apartament in chirie Balti", "4.65", "Alexandru Cel Bun 46", "160", "apartament");
-        dbHelper.insertBuilding("Apartament in chirie Comrat", "4,78", "Grigore Ureche 4", "160", "apartament");
-        dbHelper.insertBuilding("Apartament in chirie Ialoveni", "4,88", "Alexei Mateevici 33", "170", "apartament");
-        dbHelper.insertBuilding("Motelul Green Land", "4,90", "Bucuresti  44", "200", "motel");
-        dbHelper.insertBuilding("Bazar Motel ", "4,50", "Ismail 12", "300", "motel");
-        dbHelper.insertBuilding("Kalyan Hotel", "4,78", "Braila89", "140", "hotel");
-        dbHelper.insertBuilding("Hotel Codru", "4,89", "Calea Iesilor 6", "210", "hotel");
-        dbHelper.insertBuilding("Melrose Hostel", "5,00", "Stefan Cel Mare 145", "190", "hostel");
-        dbHelper.insertBuilding("Chisinau Hostel", "4,00", "Calea Iesilor 8", "159", "hostel");
-        dbHelper.insertBuilding("Be my Guest Hostel", "4,25", "Grigore Vieru 4", "140", "hostel");
-        dbHelper.insertBuilding("The Backpackshack", "4,88", "Vlaicu Pircalab 2", "160", "hostel");
-        dbHelper.insertBuilding("Paris Hostel", "4,56", "Codrului 45", "180", "hostel");
-        dbHelper.insertBuilding("Apartament in chirie Chisinau", "5,00", "Pacii 26", "300", "apartament");
-        dbHelper.insertBuilding("Funky Mamaliga Hostel", "4,67", "Florilor 9", "190", "hostel");
-        dbHelper.insertBuilding("Chisianu Chill Hostel", "4,98", "Viilor 7", "170", "hostel");
-        dbHelper.insertBuilding("Daima Hotel", "4,96", "Vasile Alexandri 3", "280", "hotel");
-        dbHelper.insertBuilding("Adam & Eva Hotel", "4,78", "Puskin 49", "170", "hotel");
-        dbHelper.insertBuilding("Apartament in chirie Balti", "4,88", "Florilor 45", "195", "apartament");
-
-
-    }
+               }
+           }).show();
+       }
 
     private void showFilterDialog(View view) {
 
