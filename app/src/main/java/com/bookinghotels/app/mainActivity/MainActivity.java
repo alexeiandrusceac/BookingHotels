@@ -18,6 +18,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.SearchView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
+
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,15 +58,17 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
     private DatePickerDialog datePicker;
     public  View postMainView;
     public ImageView imageView;
+    private Toolbar toolbar;
     private static int RESULT_LOAD_IMAGE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        postView =(TextView)findViewById(R.id.postView);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.main_app_toolbar);
-
         setContentView(R.layout.main_activity);
+         toolbar =(Toolbar)findViewById(R.id.main_app_toolbar);
+        setSupportActionBar(toolbar);
 
+
+        postView =(TextView)findViewById(R.id.postView);
         //searchFilter = (SearchView) findViewById(R.id.searchViewFilter);
         floatingButton = (FloatingActionButton)findViewById(R.id.floatingButton);
         //linearLayoutWithCards = (LinearLayout)findViewById(R.id.linearLayoutWithCards);
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
             }
         });*/
         refreshData();
-        setSupportActionBar(toolbar);
+
 
 
         floatingButton.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +214,6 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
         final EditText fromPriceInput = viewFilterDialog.findViewById(R.id.from_Price_Input);
         final EditText toPriceInput = viewFilterDialog.findViewById(R.id.to_Price_Input);
 
-        //spinnerType.setAdapter(new ArrayAdapter<Type>(MainActivity.this, android.R.layout.simple_spinner_item, dbHelper.getAllTypes()));
 
         new AlertDialog.Builder(MainActivity.this).setCancelable(false).setPositiveButton("Cauta", new DialogInterface.OnClickListener() {
             @Override
@@ -229,6 +231,7 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
     @Override
     public boolean onQueryTextSubmit(String query) {
         // This method can be used when query is submitted eg. creatting search history using SQLite DB
+        //adapter.filter(query);
 
         Toast.makeText(this, "Query Inserted", Toast.LENGTH_SHORT).show();
         return true;
@@ -236,6 +239,7 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
 
     @Override
     public boolean onQueryTextChange(String newText) {
+       adapter.filter(newText);
 
         return true;
     }

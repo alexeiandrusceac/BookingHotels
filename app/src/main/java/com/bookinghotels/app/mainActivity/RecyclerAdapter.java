@@ -17,17 +17,16 @@ import android.widget.TextView;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
-import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     static List<Hotels> dbList;
+    static List<Hotels> copyDbList;
     private DatePickerDialog datePicker;
     private static DataBaseHelper dataBaseHelper;
     static Context context;
@@ -35,6 +34,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         this.dbList = new ArrayList<Hotels>();
         this.context = context;
         this.dbList = dbList;
+        copyDbList  = new ArrayList<Hotels>();
+        copyDbList.addAll(dbList);
     }
 
     @Override
@@ -62,31 +63,32 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         ViewHolder viewHolder = new ViewHolder(itemLayoutView);
         return viewHolder;
     }
-    private void showReservationDialog(String build/*,String checkIn,String checkOut*/){
+    private void showReservationDialog(final String build){
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View reservationView = layoutInflater.inflate(R.layout.reservation_main,null,false);
 
-        final TextView buildTitle = (TextView)reservationView.findViewById(R.id.titleReservation);
+
         final EditText nameInput = (EditText)reservationView.findViewById(R.id.nameEditAutoFill);
         final EditText prenameInput = (EditText)reservationView.findViewById(R.id.prenameEditAFill);
         final EditText emailInput = (EditText)reservationView.findViewById(R.id.addressEditAFill);
-        final EditText fromDateInput = (EditText)reservationView.findViewById(R.id.nightDayFrom);
-        final EditText toDateInput = (EditText)reservationView.findViewById(R.id.nightDayTo);
+        final EditText fromDateInput = (EditText)reservationView.findViewById(R.id.dateInInput);
+        final EditText toDateInput = (EditText)reservationView.findViewById(R.id.dateOutInput);
         final EditText maxPers= (EditText)reservationView.findViewById(R.id.personEditAFill);
 
-        buildTitle.setText(context.getResources().getString(R.string.reservationText) +" la "+ build);
         //nameInput.setText("VANEA");
        // nameInput.setBackgroundColor(Color.YELLOW);
         /*prenameInput.setText();
         emailInput.setText();
-*/
+*/      String titleReservation = context.getResources().getString(R.string.reservationText)+ " la " + build;
+        final String dateFrom = setDate(R.id.dateInInput,reservationView).getText().toString();
+        final String dateTo = setDate(R.id.dateOutInput,reservationView).getText().toString();
         new AlertDialog.Builder(context)
-                .setTitle(buildTitle.toString())
+                .setTitle(titleReservation)
                 .setView(reservationView)
                 .setPositiveButton("Rezervare", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dataBaseHelper.makeReservation(buildTitle.getText().toString(),"Ion","Surdu",Integer.parseInt(maxPers.getText().toString()),setDate(fromDateInput).getText().toString(),setDate(toDateInput).getText().toString());
+                        dataBaseHelper.makeReservation(build,"Ion","Surdu",Integer.parseInt(maxPers.getText().toString()),dateFrom,dateTo);
                     }
                 })
                 .setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
@@ -97,10 +99,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }).show();
 
     }
-    public EditText setDate(EditText dateFrom) {
-        final EditText datefrominput = dateFrom;
-        dateFrom.setInputType(InputType.TYPE_NULL);
-        dateFrom.setOnClickListener(new View.OnClickListener() {
+    public EditText setDate(int element,View dateView) {
+
+        final EditText dateEditText = (EditText) dateView.findViewById(element);
+        dateEditText.setInputType(InputType.TYPE_NULL);
+        dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Calendar cldr = Calendar.getInstance();
@@ -111,13 +114,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 datePicker = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        datefrominput.setText(date + "/" + month + "/" + year);
+                        dateEditText.setText(date + "/" + month + "/" + year);
                     }
                 }, year, month, day);
                 datePicker.show();
             }
         });
-        return datefrominput;
+        return dateEditText;
     }
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
@@ -142,31 +145,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public ImageView image;
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
-            title = (TextView) itemLayoutView
-                    .findViewById(R.id.titleView);
+            title = (TextView) itemLayoutView.findViewById(R.id.titleView);
             zip = (TextView)itemLayoutView.findViewById(R.id.zipView);
             addres = (TextView)itemLayoutView.findViewById(R.id.addressView);
             rating = (TextView)itemLayoutView.findViewById(R.id.ratingView);
             price = (TextView)itemLayoutView.findViewById(R.id.priceView);
             image = (ImageView)itemLayoutView.findViewById(R.id.imageView);
             phone = (TextView)itemLayoutView.findViewById(R.id.phoneView);
+        }
 
+    }
+    public void filter(String queryText)
+    {
+        dbList.clear();
+
+        if(queryText.isEmpty())
+        {
+            dbList.addAll(copyDbList);
+        }
+        else
+        {
+
+            for(Hotels name: copyDbList)
+            {
+                if(name.Title.toLowerCase().contains(queryText.toLowerCase()))
+                {
+                    dbList.add(name);
+                }
+            }
 
         }
 
-        /*@Override
-        public void onClick(View v) {
-            Intent intent = new Intent(context,MainActivity.class);
-
-            Bundle extras = new Bundle();
-            extras.putInt("position",getAdapterPosition());
-            intent.putExtras(extras);
-
-
-            int i=getAdapterPosition();
-            intent.putExtra("position", getAdapterPosition());
-            context.startActivity(intent);
-            Toast.makeText(RecyclerAdapter.context, "you have clicked Row " + getAdapterPosition(), Toast.LENGTH_LONG).show();
-        }*/
+        notifyDataSetChanged();
     }
 }

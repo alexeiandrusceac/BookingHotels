@@ -34,14 +34,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Tabelul cu locuinte
     private static String HOTEL_TABLE_NAME = "Hotels";
     private static String HOTEL_ID = "Id_hotel";
+    private static String HOTEL_ADMIN_ID = "Id_admin";
     private static String HOTEL_TITLE = "Title";
     private static String HOTEL_RATING = "Rating";
     private static String HOTEL_ADDRESS = "Address";
     private static String HOTEL_ZIP = "Zip";
-    private static String HOTEL_ROOM_NR = "RoomNr";
     private static String HOTEL_PHONE = "Phone";
     private static String HOTEL_IMAGE = "Image";
-    private static String HOTEL_PRICE= "Price";
+    private static String HOTEL_
+
     // Tabelul cu locuinte
 
     //Tabelul cu rezervari
@@ -66,25 +67,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     private String CREATE_HOTEL_TABLE = "CREATE TABLE " + HOTEL_TABLE_NAME + "(" + HOTEL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + HOTEL_TITLE + " TEXT, " + HOTEL_ADDRESS + " TEXT, " + HOTEL_ZIP + " TEXT, " + HOTEL_PHONE + " TEXT, " +
-            HOTEL_RATING + " REAL, " + HOTEL_IMAGE + " INT," + HOTEL_ROOM_NR + " INT,"+ HOTEL_PRICE +" REAL" + ")";
+            HOTEL_RATING + " REAL, " + HOTEL_IMAGE + " INTEGER,"  + HOTEL_ADMIN_ID + " INTEGER" + ")";
 
     private String INSERT_HOTEL_TABLE =
             "INSERT INTO " + HOTEL_TABLE_NAME + "(" + HOTEL_TITLE + ", " + HOTEL_ADDRESS + ", " + HOTEL_ZIP + ", " + HOTEL_PHONE + ", " + HOTEL_RATING +
-                    " , " + HOTEL_IMAGE + ", " + HOTEL_ROOM_NR +", "+ HOTEL_PRICE+ ")" +
-                    "VALUES (" + "' Hotelul Codru'" + ", " + "' Vlaicu Pircalab 56'" + " , " + "'2514'" + " , " + "'022-145-124'" + " , " + "'4.59'" + " , " + R.drawable.hotel_codru + " , "+ "'3'" + ", " +"'300'"+ "), " +
-                    "(" + "'Hotelul National'" + ", " + "'Grigore Vieru 34'" + " , " + "'6805'" + " , " + "'022-452-275'" + " , " + "'5.00'" + " , " + R.drawable.hotel_national + " , "+ "'4'" + ", " +"'550'"+ "), " +
-                    "(" + "'Hotelul Grand Palace'" + ", " + "'Vasile Alexandri 57'" + " , " + "'6805'" + " , " + "'022-632-012'" + " , " + "'4.89'" + " , " + R.drawable.grand_palace +" , "+ "'3'" + ", " + "'400'"+"), " +
-                    "(" + "'Hotelul Eftalia'" + ", " + "'Alexandru Cel Bun 46'" + " , " + "'7805'" + " , " + "'022-412-714'" + " , " + "'4.65'" + " , " + R.drawable.eftalia +" , "+ "'4'" + ", " + "'450'"+ "), " +
-                    "(" + "'Hotelul Elenite'" + ", " + "'Grigore Ureche 4'" + "," + "'8801'" + " , " + "'022-125-132'" + " , " + "'4.56'" + " , " + R.drawable.elenite + " , "+ "'1'" + ", "+ "'150'"+")," +
-                    "(" + "'Hotelul Cosmos Gonaives'" + ", " + "'Alexei Mateevici 33'" + ", " + "'6801'" + " , " + "'022-145-256'" + ", " + "'4.88'" + " , " + R.drawable.cosmos + " , "+ "'4'"+ ", " + "'500'"+")," +
-                    "(" + "'Hotelul JOLLY ALLON'" + ", " + "'Bucuresti  44'" + " , " + "'6801'" + " , " + "'022-122-122'" + " , " + "'4.90'" + " , " + R.drawable.gl_motel + " , "+ "'5'" + ", "+"'600'"+"), " +
-                    "(" + "'Bazar Hotel'" + ", " + "'Ismail 12'" + " , " + "'5800'" + " , " + "'022-145-541'" + " , " + "'4.50'" + " , " + R.drawable.bazar_hotel + " , "+ "'3'"+ ", " +"'350'"+ "), " +
-                    "(" + "'Kalyan Hotel'" + ", " + "'Braila 89'" + " , " + "'5801'" + " , " + "'022-122-365'" + " , " + "'4.78'" + " , " + R.drawable.kalyan_motel +" , "+ "'2'"+ ", " +"'250'"+ ")";
+                    " , " + HOTEL_IMAGE + ", "  + HOTEL_ADMIN_ID + ")" +
+                    "VALUES (" + "' Hotelul Codru'" + ", " + "' Vlaicu Pircalab 56'" + " , " + "'2514'" + " , " + "'022-145-124'" + " , " + "'4.59'" + " , " + R.drawable.hotel_codru + " , " + "'1'" + "), " +
+                    "(" + "'Hotelul National'" + ", " + "'Grigore Vieru 34'" + " , " + "'6805'" + " , " + "'022-452-275'" + " , " + "'5.00'" + " , " + R.drawable.hotel_national + " , " +  "'1'" + "), " +
+                    "(" + "'Hotelul Grand Palace'" + ", " + "'Vasile Alexandri 57'" + " , " + "'6805'" + " , " + "'022-632-012'" + " , " + "'4.89'" + " , " + R.drawable.grand_palace + " , " +  "'2'" + "), " +
+                    "(" + "'Hotelul Eftalia'" + ", " + "'Alexandru Cel Bun 46'" + " , " + "'7805'" + " , " + "'022-412-714'" + " , " + "'4.65'" + " , " + R.drawable.eftalia + " , " +  "'2'" + "), " +
+                    "(" + "'Hotelul Elenite'" + ", " + "'Grigore Ureche 4'" + "," + "'8801'" + " , " + "'022-125-132'" + " , " + "'4.56'" + " , " + R.drawable.elenite + " , " +  "'3'" + ")," +
+                    "(" + "'Hotelul Cosmos Gonaives'" + ", " + "'Alexei Mateevici 33'" + ", " + "'6801'" + " , " + "'022-145-256'" + ", " + "'4.88'" + " , " + R.drawable.cosmos + " , " +  "'4'" + ")," +
+                    "(" + "'Hotelul JOLLY ALLON'" + ", " + "'Bucuresti  44'" + " , " + "'6801'" + " , " + "'022-122-122'" + " , " + "'4.90'" + " , " + R.drawable.gl_motel + " , " +  "'3'" + "), " +
+                    "(" + "'Bazar Hotel'" + ", " + "'Ismail 12'" + " , " + "'5800'" + " , " + "'022-145-541'" + " , " + "'4.50'" + " , " + R.drawable.bazar_hotel + " , " +  "'4'" + "), " +
+                    "(" + "'Kalyan Hotel'" + ", " + "'Braila 89'" + " , " + "'5801'" + " , " + "'022-122-365'" + " , " + "'4.78'" + " , " + R.drawable.kalyan_motel + " , " + "'5'" + ")";
 
     private String CREATE_RESERV_TABLE = "CREATE TABLE " + RESERV_TABLE_NAME + "(" + RESERV_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + RESERV_HOTEL_ID + " INTEGER," + RESERV_GUEST_ID + " INTEGER, " + RESERV_DATE_IN + " TEXT," + RESERV_DATE_OUT + " TEXT, "
             + RESERV_NR_PERS + " INTEGER" + ")";
 
-  //  private String CREATE_USER_TABLE = "CREATE TABLE " + USER_TABLE_NAME + "(" + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " TEXT, " + USER_PRENAME + " TEXT," + USER_EMAIL + " TEXT," + USER_PASSWORD + " TEXT" + ")";
+    //  private String CREATE_USER_TABLE = "CREATE TABLE " + USER_TABLE_NAME + "(" + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " TEXT, " + USER_PRENAME + " TEXT," + USER_EMAIL + " TEXT," + USER_PASSWORD + " TEXT" + ")";
 
     /***************************************************************CREAREA TABELELOR*****************************************************************************************/
 
@@ -140,10 +141,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /*******************************************************************************UTILIZATOR************************************************************/
     @Override
     public void onCreate(SQLiteDatabase db) {
-       //db.execSQL(CREATE_USER_TABLE);
+        //db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_HOTEL_TABLE);
         db.execSQL(INSERT_HOTEL_TABLE);
-
         db.execSQL(CREATE_RESERV_TABLE);
     }
 
@@ -183,21 +183,46 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertBuilding(String title,  float rating, String address,  int image, String zip,String phone,String nrRooms,String price) {
+    public void insertBuilding(String title, float rating, String address, int image, String zip, String phone, String nrRooms, String price) {
         ContentValues values = new ContentValues();
         sqLiteDatabase = this.getWritableDatabase();
         values.put(HOTEL_TITLE, title);
         values.put(HOTEL_ADDRESS, address);
         values.put(HOTEL_RATING, rating);
-        values.put(HOTEL_ZIP,zip);
+        values.put(HOTEL_ZIP, zip);
         values.put(HOTEL_IMAGE, image);
-        values.put(HOTEL_PHONE,phone);
-        values.put(HOTEL_ROOM_NR,nrRooms);
-        values.put(HOTEL_PRICE,price);
+        values.put(HOTEL_PHONE, phone);
+        values.put(HOTEL_ROOM_NR, nrRooms);
+        values.put(HOTEL_PRICE, price);
 
         sqLiteDatabase.insert(HOTEL_TABLE_NAME, null, values);
         sqLiteDatabase.close();
     }
+
+    /*public List<Hotels> getHotelsByName(String hName)
+    {
+        List<Hotels> listOfHotelsByName = new ArrayList<>();
+        sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursorListOFH = sqLiteDatabase.rawQuery("SELECT * FROM "+ HOTEL_TABLE_NAME+" WHERE " + HOTEL_TITLE + " = ?", new String[]{hName});
+        if(cursorListOFH.moveToFirst())
+        {
+            do{
+                Hotels hotels = new Hotels();
+                hotels.Id_hotel = cursorListOFH.getInt(cursorListOFH.getColumnIndex(HOTEL_ID));
+                hotels.Title = cursorListOFH.getString(cursorListOFH.getColumnIndex(HOTEL_TITLE));
+                hotels.Rating = cursorListOFH.getFloat(cursorListOFH.getColumnIndex(HOTEL_RATING));
+                hotels.Address = cursorListOFH.getString(cursorListOFH.getColumnIndex(HOTEL_ADDRESS));
+                hotels.Zip = cursorListOFH.getString(cursorListOFH.getColumnIndex(HOTEL_ZIP));
+                hotels.NrRooms = cursorListOFH.getInt(cursorListOFH.getColumnIndex(HOTEL_ROOM_NR));
+                hotels.Price = cursorListOFH.getInt(cursorListOFH.getColumnIndex(HOTEL_PRICE));
+                hotels.Image = cursorListOFH.getInt(cursorListOFH.getColumnIndex(HOTEL_IMAGE));
+                hotels.Phone = cursorListOFH.getString(cursorListOFH.getColumnIndex(HOTEL_PHONE));
+                listOfHotelsByName.add(hotels);
+            }while(cursorListOFH.moveToNext());
+        }
+        sqLiteDatabase.close();
+        return listOfHotelsByName;
+    }*/
 
     public List<Hotels> getHotelsByFilter(Hotels hFilter, int priceFrom, int priceTo) {
         List<Hotels> listOfHotels = new ArrayList<>();

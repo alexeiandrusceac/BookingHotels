@@ -1,81 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:andorid="http://schemas.android.com/tools"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:fitsSystemWindows="true">
+    tools:context="com.bookinghotels.app.mainActivity.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:theme="@style/AppTheme.AppBarOverlay"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_app_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/main_app_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:theme="@style/SearchViewStyle">
-
-            <android.support.v7.widget.SearchView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_gravity="end"
-                style="@style/SearchViewStyle"
-
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                />
-
-            <!--<Button
-                android:id="@+id/buttonFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"></Button>-->
-
-        </android.support.v7.widget.Toolbar>
-
-
-    </android.support.design.widget.AppBarLayout>
-
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorAccent"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="55dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="55dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleview"
-        android:background="#d9d9d9"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#d9d9d9"
+            android:scrollbars="vertical"/>
 
-    </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-       >
+        android:layout_marginRight="10dp"/>
 
-
-    </android.support.design.widget.FloatingActionButton>
-    <TextView android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="@string/post_View"
-        android:elevation="6dp"
-        android:textSize="10dp"
+    <TextView
         android:id="@+id/postView"
-        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="@string/post_View"
         android:textColor="#fff"
+        android:textSize="10dp"
+        android:visibility="visible"
         app:layout_anchor="@id/floatingButton"
-        app:layout_anchorGravity="center"/>
+        app:layout_anchorGravity="center" />
 </android.support.design.widget.CoordinatorLayout>

@@ -14,17 +14,27 @@
         android:layout_height="wrap_content"
         android:padding="15dp">
 
+
+
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="1200px"
+            android:layout_width="400px"
             android:layout_height="300px" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_horizontal"
+            android:layout_toRightOf="@+id/imageView"
+            android:background="@color/colorAccent"
+            android:text="@string/reservationText"
+            android:textColor="@color/searchBar" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/imageView"
-            android:orientation="horizontal"
             android:gravity="center|center_horizontal|center_vertical"
+            android:orientation="horizontal"
             android:weightSum="2">
 
             <LinearLayout
