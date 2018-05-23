@@ -50,7 +50,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static String RESERV_ID = "Reserv_id";
     private static String RESERV_GUEST_ID = "Guest_id";
     private static String RESERV_ROOM_ID = "Room_id";
-    private static String RESERV_HOTEL_ID = "HotelID";
+    private static String RESERV_HOTEL_I
+    D = "HotelID";
     private static String RESERV_DATE_IN = "DateIn";
     private static String RESERV_DATE_OUT = "DateOut";
     private static String RESERV_NR_PERS = "Nr_Person";
