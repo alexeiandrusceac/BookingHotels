@@ -40,6 +40,8 @@ import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,12 +61,14 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
     public  View postMainView;
     public ImageView imageView;
     private Toolbar toolbar;
+
     private static int RESULT_LOAD_IMAGE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-         toolbar =(Toolbar)findViewById(R.id.main_app_toolbar);
+        toolbar =(Toolbar)findViewById(R.id.main_app_toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -86,7 +90,6 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
         refreshData();
 
 
-
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +97,10 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
             }
         });
     }
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

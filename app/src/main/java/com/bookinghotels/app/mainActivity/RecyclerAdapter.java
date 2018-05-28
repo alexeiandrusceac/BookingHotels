@@ -10,6 +10,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +29,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     static List<Hotels> dbList;
     static List<Hotels> copyDbList;
     private DatePickerDialog datePicker;
+
+    private boolean showContent = true;
     private static DataBaseHelper dataBaseHelper;
     static Context context;
     RecyclerAdapter(Context context, List<Hotels> dbList ){
@@ -42,27 +45,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         final View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_main, null);
-        final CardView cardView = itemLayoutView.findViewById(R.id.cardView);
-        cardView.setOnClickListener(new View.OnClickListener() {
+        //final CardView cardView = itemLayoutView.findViewById(R.id.cardView);
+        final Button reservationButton = itemLayoutView.findViewById(R.id.reservButton);
+
+        reservationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String build = ((TextView)v.findViewById(R.id.titleView)).getText().toString();
+                String hotelTitle = ((TextView)itemLayoutView.findViewById(R.id.titleView)).getText().toString();
 
-                showReservationDialog(build);
+                showReservationDialog(hotelTitle);
             }
         });
 
-        /*itemLayoutView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });*/
-        // create ViewHolder
 
         ViewHolder viewHolder = new ViewHolder(itemLayoutView);
         return viewHolder;
     }
+
+
     private void showReservationDialog(final String build){
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View reservationView = layoutInflater.inflate(R.layout.reservation_main,null,false);
@@ -129,7 +129,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.addres.setText(dbList.get(position).Address);
         holder.zip.setText(dbList.get(position).Zip);
         holder.rating.setText(String.valueOf(dbList.get(position).Rating));
-        holder.price.setText(String.valueOf(dbList.get(position).Price));
+       // holder.price.setText(String.valueOf(dbList.get(position).Price));
         holder.image.setImageResource(dbList.get(position).Image);
         holder.phone.setText(dbList.get(position).Phone);
     }
@@ -149,9 +149,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             zip = (TextView)itemLayoutView.findViewById(R.id.zipView);
             addres = (TextView)itemLayoutView.findViewById(R.id.addressView);
             rating = (TextView)itemLayoutView.findViewById(R.id.ratingView);
-            price = (TextView)itemLayoutView.findViewById(R.id.priceView);
+            //price = (TextView)itemLayoutView.findViewById(R.id.priceView);
             image = (ImageView)itemLayoutView.findViewById(R.id.imageView);
             phone = (TextView)itemLayoutView.findViewById(R.id.phoneView);
+
         }
 
     }

@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
@@ -24,18 +25,19 @@ private TextInputLayout passwordLayout;
 private TextInputEditText nameInputEditText;
 private TextInputEditText passwordInputEditText;
 private AppCompatButton loginButton;
-private AppCompatTextView registerLink;
+private TextView registerLink;
 private ValidationUserInputData valUserInput;
 private DataBaseHelper userDBHelper;
 private AppBarLayout appBarLayout;
-private Toolbar toolbar;
+private Toolbar loginToolbar;
 @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-        getSupportActionBar().hide();
-
+        //getSupportActionBar().hide();
+        loginToolbar = (Toolbar)findViewById(R.id.login_app_toolbar);
+        setSupportActionBar(loginToolbar);
         ///Initializarea obiectelor din activity
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
@@ -43,14 +45,21 @@ private Toolbar toolbar;
         nameInputEditText = (TextInputEditText) findViewById(R.id.user_name_text);
         passwordInputEditText = (TextInputEditText) findViewById(R.id.password_Input);
         loginButton = (AppCompatButton) findViewById(R.id.login_button);
-        registerLink = (AppCompatTextView) findViewById(R.id.register_text_view);
+        registerLink = (TextView) findViewById(R.id.registerView);
         //appBarLayout = (AppBarLayout)findViewById(R.id.login_appBarLayout);
-        //toolbar = (Toolbar)findViewById(R.id.login_toolbar);
+
 
        // setSupportActionBar(toolbar);
+
         // Initializarea Listeners
         loginButton.setOnClickListener(this);
-        registerLink.setOnClickListener(this);
+        registerLink.setOnClickListener(/*new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(i);
+            }
+        }*/this);
 
         userDBHelper = new DataBaseHelper(compatActivity);
         valUserInput = new ValidationUserInputData(compatActivity);

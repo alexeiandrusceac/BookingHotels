@@ -14,25 +14,48 @@
         android:layout_height="wrap_content"
         android:padding="15dp">
 
-
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="400px"
-            android:layout_height="300px" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center_horizontal"
-            android:layout_toRightOf="@+id/imageView"
-            android:background="@color/colorAccent"
-            android:text="@string/reservationText"
-            android:textColor="@color/searchBar" />
         <LinearLayout
+            android:id="@+id/linearImageButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/imageView"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="400px"
+                    android:layout_height="300px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/reservButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal|center_vertical"
+                    android:background="@color/colorAccent"
+                    android:gravity="center"
+                    android:text="@string/reservationText"
+                    android:textColor="@color/searchBar" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/info_Hotel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearImageButton"
             android:gravity="center|center_horizontal|center_vertical"
             android:orientation="horizontal"
             android:weightSum="2">
@@ -103,7 +126,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
+               <!-- <TextView
                     android:id="@+id/priceLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -119,14 +142,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/priceLabel"
                     android:layout_below="@id/priceLabel"
-                    android:textColor="#808080" />
+                    android:textColor="#808080" />-->
 
                 <TextView
                     android:id="@+id/phoneLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/priceView"
-                    android:layout_below="@id/priceView"
+                    android:layout_alignLeft="@id/addressView"
+                    android:layout_below="@id/addressView"
                     android:text="@string/phone"
                     android:textColor="#000000"
                     android:textSize="16dp" />
@@ -155,7 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/zipLabel"
                     android:layout_below="@id/zipLabel"
-                    android:textColor="#000000" />
+                    android:textColor="#808080" />
             </LinearLayout>
         </LinearLayout>
 

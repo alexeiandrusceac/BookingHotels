@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BookingHotels</string>
+    <string name="app_name">Booking Hotels</string>
     <string name="user_name">Numele:</string>
     <string name="user_prename">Prenumele:</string>
     <string name="password">Parola:</string>
@@ -13,7 +13,7 @@
     <string name="error_password">Introduceti parola</string>
     <string name="error_email_password">Introduceti email si parola</string>
     <string name="conf_password">Confirmati parola</string>
-    <string name="error_password_match">Nu se conincide cu parola de confirmare</string>
+    <string name="error_password_match">Nu coincide cu parola de confirmare</string>
     <string name="search_house">Cautare locuinte</string>
     <string name="type">Tipul locuintei:</string>
     <string name="rating">Apreciere:</string>

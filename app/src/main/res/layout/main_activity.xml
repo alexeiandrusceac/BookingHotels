@@ -46,7 +46,7 @@
         android:elevation="6dp"
         android:text="@string/post_View"
         android:textColor="#fff"
-        android:textSize="10dp"
+        android:textSize="15dp"
         android:visibility="visible"
         app:layout_anchor="@id/floatingButton"
         app:layout_anchorGravity="center" />
