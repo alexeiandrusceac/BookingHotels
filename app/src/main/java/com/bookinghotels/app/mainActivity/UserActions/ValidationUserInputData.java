@@ -1,10 +1,9 @@
-package com.bookinghotels.app.mainActivity.User;
+package com.bookinghotels.app.mainActivity.UserActions;
 
 import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -16,29 +15,29 @@ public class ValidationUserInputData {
         this.context = context;
     }
 
-    public boolean textFilled(TextInputEditText emailInputText, TextInputLayout emailInputLayout, String message) {
-        String valueEmail = emailInputText.getText().toString().trim();
-        if (valueEmail.isEmpty()) {
-            emailInputLayout.setError(message);
-            hideKeyboard(emailInputText);
+    public boolean textFilled(TextInputEditText inputEditText, TextInputLayout textInputLayout, String message) {
+        String valueData = inputEditText.getText().toString().trim();
+        if (valueData.isEmpty()) {
+            textInputLayout.setError(message);
+            hideKeyboard(inputEditText);
             return false;
         } else {
-            emailInputLayout.setErrorEnabled(false);
+            textInputLayout.setErrorEnabled(false);
         }
         return true;
     }
-    public boolean emailValidating(TextInputEditText textInputEmail,TextInputLayout textInputEmailLayout,String message)
+    public boolean nameValidating(TextInputEditText textInputName,TextInputLayout textInputNameLayout,String message)
     {
-        String valueEmailVal = textInputEmail.getText().toString().trim();
-        if(valueEmailVal.isEmpty()|| !Patterns.EMAIL_ADDRESS.matcher(valueEmailVal).matches())
+        String valueNameVal = textInputName.getText().toString().trim();
+        if(valueNameVal.isEmpty() /*|| !Patterns.DOMAIN_NAME.matcher(valueNameVal).matches()*/)
         {
-            textInputEmailLayout.setError(message);
-            hideKeyboard(textInputEmail);
+            textInputNameLayout.setError(message);
+            hideKeyboard(textInputName);
             return false;
         }
         else
         {
-            textInputEmailLayout.setErrorEnabled(false);
+            textInputNameLayout.setErrorEnabled(false);
         }
         return true;
     }

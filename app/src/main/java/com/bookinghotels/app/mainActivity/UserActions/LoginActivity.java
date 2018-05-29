@@ -1,4 +1,4 @@
-package com.bookinghotels.app.mainActivity.User;
+package com.bookinghotels.app.mainActivity.UserActions;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +9,14 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bookinghotels.app.R;
-import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
+import com.bookinghotels.app.mainActivity.MainActivity;
+import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
+import com.bookinghotels.app.mainActivity.UserActions.User.User;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 private final AppCompatActivity compatActivity = LoginActivity.this;
@@ -30,6 +31,7 @@ private ValidationUserInputData valUserInput;
 private DataBaseHelper userDBHelper;
 private AppBarLayout appBarLayout;
 private Toolbar loginToolbar;
+private DataBaseHelper usrHelper;
 @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -53,13 +55,7 @@ private Toolbar loginToolbar;
 
         // Initializarea Listeners
         loginButton.setOnClickListener(this);
-        registerLink.setOnClickListener(/*new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(i);
-            }
-        }*/this);
+        registerLink.setOnClickListener(this);
 
         userDBHelper = new DataBaseHelper(compatActivity);
         valUserInput = new ValidationUserInputData(compatActivity);
@@ -73,7 +69,7 @@ private Toolbar loginToolbar;
             case R.id.login_button:
                 checkUser();
                 break;
-            case R.id.register_button:
+            case R.id.registerView:
                 Intent intentRegister = new Intent(getApplicationContext(),RegisterActivity.class);
                 startActivity(intentRegister);
                 break;
@@ -81,10 +77,7 @@ private Toolbar loginToolbar;
     }
     private void checkUser()
     {
-        if(!valUserInput.textFilled(nameInputEditText,nameLayout,getString(R.string.error_email)))
-        return;
-
-        if(!valUserInput.emailValidating(nameInputEditText,nameLayout,getString(R.string.error_email)))
+        if(!valUserInput.nameValidating(nameInputEditText,nameLayout,getString(R.string.error_name)))
         return;
 
         if(!valUserInput.textFilled(passwordInputEditText,passwordLayout,getString(R.string.error_password)))
@@ -92,15 +85,15 @@ private Toolbar loginToolbar;
 
         if(userDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(),passwordInputEditText.getText().toString().trim()))
         {
-            Intent accountIntent = new Intent(compatActivity, User.class);
-            accountIntent.putExtra("EMAIL",nameInputEditText.getText().toString().trim());
-            nameInputEditText.setText(null);
-            passwordInputEditText.setText(null);
-            startActivity(accountIntent);
+            Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+            //userDBHelper.getUser(nameInputEditText.getText().toString(),passwordInputEditText.getText().toString());
+            //mainActivityIntent.putExtra("Name",nameInputEditText.getText().toString());
+          //  mainActivityIntent.putExtra("UserImage", );
+            startActivity(mainActivityIntent);
         }
         else
         {
-            Snackbar.make(scrollView,getString(R.string.error_email_password),Snackbar.LENGTH_LONG).show();
+            Snackbar.make(scrollView,getString(R.string.error_name_password),Snackbar.LENGTH_LONG).show();
         }
     }
 }

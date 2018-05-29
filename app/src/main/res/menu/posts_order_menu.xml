@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<group>
+    <item
+        android:title="@string/myPosts"
+        android:id="@+id/myPosts"/>
+    <item
+        android:title="@string/myReservations"
+        android:id="@+id/myReservations"/>
+</group>
+</menu>

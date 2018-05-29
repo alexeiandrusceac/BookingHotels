@@ -5,13 +5,21 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -22,7 +30,6 @@ import android.support.v7.widget.SearchView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,51 +42,59 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
-import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
-
-import org.w3c.dom.Text;
+import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity  implements SearchView.OnQueryTextListener{
-    private static SearchView searchFilter;
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
+        NavigationView.OnNavigationItemSelectedListener {
+    // private static SearchView searchFilter;
     private static DataBaseHelper dbHelper;
     private static List<Hotels> listOfHotels = new ArrayList<>();
-    private static CardView cardView;
-    private static Button filterButton;
+    // private static CardView cardView;
+    //private static Button filterButton;
     private FloatingActionButton floatingButton;
-    private RelativeLayout relativeLayoutWithCards;
+    //private RelativeLayout relativeLayoutWithCards;
     private RecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private TextView postView;
-    private DatePickerDialog datePicker;
-    public  View postMainView;
+    //private TextView postView;
+    //private DatePickerDialog datePicker;
+    public View postMainView;
     public ImageView imageView;
     private Toolbar toolbar;
+    //private ImageView userImageView;
+    private DrawerLayout drawerLayout;
 
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
     private static int RESULT_LOAD_IMAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        toolbar =(Toolbar)findViewById(R.id.main_app_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.main_app_toolbar);
         setSupportActionBar(toolbar);
 
+        //postView = (TextView) findViewById(R.id.postView);
 
-        postView =(TextView)findViewById(R.id.postView);
-        //searchFilter = (SearchView) findViewById(R.id.searchViewFilter);
-        floatingButton = (FloatingActionButton)findViewById(R.id.floatingButton);
-        //linearLayoutWithCards = (LinearLayout)findViewById(R.id.linearLayoutWithCards);
-        //cardView = (CardView)findViewById(R.id.cardView);
-        dbHelper= new DataBaseHelper(this);
-       // filterButton = (Button) findViewById(R.id.buttonFilter);
+        floatingButton = (FloatingActionButton) findViewById(R.id.floatingButton);
 
+        dbHelper = new DataBaseHelper(MainActivity.this);
+
+        navigationView = (NavigationView) findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+
+
+        setupDrawer();
         listOfHotels = dbHelper.getHotels();
        /* filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,18 +102,50 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
                 showFilterDialog(v);
             }
         });*/
+
+
+        //userImageView = (ImageView) findViewById(R.id.nav_header_imageView);
+
+
         refreshData();
-
-
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPostDialog();
             }
         });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
+    private void setupDrawer() {
+        toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
 
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
 
+                invalidateOptionsMenu();
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+       toggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.addDrawerListener(toggle);
+    }
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
 
     @Override
@@ -109,11 +156,23 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
         MenuItem searchItem = menu.findItem(R.id.searchBar);
 
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint("Search People");
+        searchView.setQueryHint("Cautarea hotelelor");
         searchView.setOnQueryTextListener(MainActivity.this);
         searchView.setIconified(false);
 
         return true;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
     }
 
     @Override
@@ -123,28 +182,30 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
 
         if (id == R.id.searchBar) {
             return true;
+        } else if (toggle.onOptionsItemSelected(item)) {
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void refreshData()
-    {
-        recyclerView =  (RecyclerView)findViewById(R.id.recycleview);
+    public void refreshData() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycleview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecyclerAdapter(MainActivity.this,listOfHotels);
+        adapter = new RecyclerAdapter(MainActivity.this, listOfHotels);
         recyclerView.setAdapter(adapter);
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
@@ -156,38 +217,31 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
 
             imageView = (ImageView) postMainView.findViewById(R.id.imageViewPost);
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
         }
 
-
     }
-       private void showPostDialog()
-       {
-           LayoutInflater layoutInflater = (LayoutInflater)MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-           postMainView = layoutInflater.inflate(R.layout.post_main,null,false);
-           final Button imageLoader = postMainView.findViewById(R.id.buttonLoadPicturePost);
-           final EditText buildTitle =  postMainView.findViewById(R.id.titleInputPost);
-         //  final Spinner buildType = postMainView.findViewById(R.id.typeInputPost);
-           final EditText buildAddress = postMainView.findViewById(R.id.addressInputPost);
-           final EditText buildPrice = postMainView.findViewById(R.id.priceInputPost);
-           //final EditText buildCheckIn = postMainView.findViewById(R.id.checkInInputPost);
-          // final EditText buildCheckOut = postMainView.findViewById(R.id.checkOutInputPost);
 
-           //(dbHelper.getAllTypes().toArray(String)).subList(,1)
-          // buildType.setAdapter(new ArrayAdapter<Type>(MainActivity.this, android.R.layout.simple_spinner_item, ));
+    private void showPostDialog() {
+        LayoutInflater layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        postMainView = layoutInflater.inflate(R.layout.post_main, null, false);
+        final Button imageLoader = postMainView.findViewById(R.id.buttonLoadPicturePost);
+        final EditText hotelTitle = postMainView.findViewById(R.id.titleInputPost);
 
-           imageLoader.setOnClickListener(new View.OnClickListener() {
-               @SuppressLint("NewApi")
-               @Override
-               public void onClick(View v) {
-                   Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                   startActivityForResult(intent,RESULT_LOAD_IMAGE);
-               }
-           });
-           new AlertDialog.Builder(MainActivity.this).setView(postMainView).setCancelable(false).setPositiveButton(
-                   "Posteaza", new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(DialogInterface dialog, int which) {
+        final EditText hotelAddress = postMainView.findViewById(R.id.addressInputPost);
+        final EditText hotelPrice = postMainView.findViewById(R.id.priceInputPost);
+
+        imageLoader.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, RESULT_LOAD_IMAGE);
+            }
+        });
+        new AlertDialog.Builder(MainActivity.this).setView(postMainView).setCancelable(false).setPositiveButton(
+                "Posteaza", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                             /*dbHelper.insertBuilding(buildTitle.getText().toString(),
                                     buildAddress.getText().toString(),
                                     Integer.parseInt(buildPrice.getText().toString()),
@@ -195,17 +249,17 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
                                     Integer.parseInt(imageView.getDrawable().toString()));
                                     //buildCheckIn.getText().toString(),
                                    // buildCheckOut.getText().toString());*/
-                       }
-                   }
-           ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialog, int which) {
+                    }
+                }
+        ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-               }
-           }).show();
-           listOfHotels = dbHelper.getHotels();
-           refreshData();
-       }
+            }
+        }).show();
+        listOfHotels = dbHelper.getHotels();
+        refreshData();
+    }
 
     private void showFilterDialog(View view) {
 
@@ -246,8 +300,23 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
 
     @Override
     public boolean onQueryTextChange(String newText) {
-       adapter.filter(newText);
+        adapter.filter(newText);
 
+        return true;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.myPosts:
+                Toast.makeText(MainActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.myReservations:
+                Toast.makeText(MainActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                return false;
+        }
         return true;
     }
 }

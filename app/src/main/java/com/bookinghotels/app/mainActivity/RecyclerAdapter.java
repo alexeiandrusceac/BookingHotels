@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
-import com.bookinghotels.app.mainActivity.User.Database.DataBaseHelper;
+import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package com.bookinghotels.app.mainActivity.User.Database;
+package com.bookinghotels.app.mainActivity.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,8 +9,7 @@ import android.util.Log;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
-import com.bookinghotels.app.mainActivity.Type;
-import com.bookinghotels.app.mainActivity.User.User;
+import com.bookinghotels.app.mainActivity.UserActions.User.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static String USER_PRENAME = "LastName";
     private static String USER_EMAIL = "Email";
     private static String USER_PASSWORD = "Password";
+    private static String USER_IMAGE= "Image";
     // Tabelul cu utilizatori
 
     // Tabelul cu hotele
@@ -98,10 +98,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     /********************************************************************USERS_TABLE********************************************************************************************/
-    private String CREATE_USER_TABLE = "CREATE TABLE " + USER_TABLE_NAME + "(" + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " TEXT, " + USER_PRENAME + " TEXT," + USER_EMAIL + " TEXT," + USER_PASSWORD + " TEXT" + ")";
-    private String INSERT_USER_TABLE = "INSERT INTO " + USER_TABLE_NAME + "(" + USER_NAME + ", " + USER_PRENAME + ", " + USER_EMAIL + ", " + USER_PASSWORD + ")" +
-            "VALUES (" + "'Ion'" + ", " + "'Andronachi'" + ", " + "'ionandronachi@gmail.com'" + ", " + "'pass1'" + "), " +
-            "(" + "'Vadim'" + ", " + "'Stirba'" + ", " + "'vadimstirba@gmail.com'" + ", " + "'vadim'" + ")";
+    private String CREATE_USER_TABLE = "CREATE TABLE " + USER_TABLE_NAME + "(" + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " TEXT, " + USER_PRENAME + " TEXT, " + USER_EMAIL + " TEXT, " + USER_PASSWORD + " TEXT, " + USER_IMAGE + " INTEGER "+ ")";
+    private String INSERT_USER_TABLE = "INSERT INTO " + USER_TABLE_NAME + "(" + USER_NAME + ", " + USER_PRENAME + ", " + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_IMAGE +")" +
+            "VALUES (" + "'Ion'" + ", " + "'Andronachi'" + ", " + "'ionandronachi@gmail.com'" + ", " + "'pass1'"+", " + R.drawable.ic_account_circle_black_24dp +"), " +
+            "(" + "'Vadim'" + ", " + "'Stirba'" + ", " + "'vadimstirba@gmail.com'" + ", " + "'vadim'" +", "+  R.drawable.vadim+  ")";
     /********************************************************************USERS_TABLE********************************************************************************************/
 
     /********************************************************************ROOMS_TABLE********************************************************************************************/
@@ -142,26 +142,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     /***************************************************************************UTILIZATOR***********************************************************/
-    public boolean checkUserOnLogin(String email, String password) {
+    public boolean checkUserOnLogin(String name, String password) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.query(USER_TABLE_NAME,
-                new String[]{USER_ID},
-                USER_EMAIL + " =?" + " AND " + USER_PASSWORD + " =?",
-                new String[]{email, password},
-                null, null, USER_ID);
-        cursor.close();
+                new String[]{USER_ID},USER_NAME + " = ? "+ " AND " + USER_PASSWORD + " = ? ",new String[]{name,password},null,null, USER_ID);
+
         if (cursor.getCount() > 0) {
             return true;
         }
+        cursor.close();
         return false;
     }
 
-    public boolean checkUserOnLogin(String email) {
+    public boolean checkUserOnLogin(String name) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.query(USER_TABLE_NAME,
-                new String[]{USER_ID},
-                USER_EMAIL + " =?",
-                new String[]{email},
+                new String[]{USER_ID}, USER_NAME + " = ?", new String[]{name},
                 null, null, USER_ID);
         cursor.close();
         if (cursor.getCount() > 0) {
@@ -177,16 +173,37 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(USER_PRENAME, user.Prename);
         values.put(USER_EMAIL, user.Email);
         values.put(USER_PASSWORD, user.Password);
+        values.put(USER_IMAGE, user.Image);
         long id = database.insert(USER_TABLE_NAME, null, values);
         database.close();
         Log.d(TAG, String.format("Utilizatorul cu numele " + USER_NAME + " " + USER_PRENAME + " s-a inregistrat cu succes"));
     }
+    public User getUser(String userName, String password)
+    {
+        User user = new User();
+        sqLiteDatabase = this.getReadableDatabase();
+        Cursor curUser = sqLiteDatabase.query(USER_TABLE_NAME , new String[]{USER_ID},USER_NAME + " = ? "+ " AND " + USER_PASSWORD + " = ? ",new String[]{userName,password},null,null, USER_ID);
+        if(curUser.moveToFirst())
+        {do {
 
+            user.Image = curUser.getInt(curUser.getColumnIndex(USER_IMAGE));
+            user.Name = curUser.getString(curUser.getColumnIndex(USER_NAME));
+            user.Prename = curUser.getString(curUser.getColumnIndex(USER_PRENAME));
+            user.Email = curUser.getString(curUser.getColumnIndex(USER_EMAIL));
+            user.Password = curUser.getString(curUser.getColumnIndex(USER_PASSWORD));
+
+        }while(curUser.moveToNext());
+
+        }
+
+        sqLiteDatabase.close();
+        return user;
+    }
     /*******************************************************************************UTILIZATOR************************************************************/
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // db.execSQL(CREATE_USER_TABLE);
-        //db.execSQL(INSERT_USER_TABLE);
+         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(INSERT_USER_TABLE);
         db.execSQL(CREATE_HOTEL_TABLE);
         db.execSQL(INSERT_HOTEL_TABLE);
         //db.execSQL(CREATE_RESERV_TABLE);
@@ -229,7 +246,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.close();
 
         return listOfHotels;
-
+//asduhaudha
     }
 
     public void insertHotel(int idRoom, int idAdmin, String title, float rating, String address, int image, String zip, String phone) {

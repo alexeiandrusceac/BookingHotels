@@ -11,7 +11,7 @@
     <string name="error_name">Introduceti numele</string>
     <string name="error_prename">Introduceti prenumele</string>
     <string name="error_password">Introduceti parola</string>
-    <string name="error_email_password">Introduceti email si parola</string>
+    <string name="error_name_password">Nu exista asa cont. Va rugam sa va inregistra-ti.</string>
     <string name="conf_password">Confirmati parola</string>
     <string name="error_password_match">Nu coincide cu parola de confirmare</string>
     <string name="search_house">Cautare locuinte</string>
@@ -36,5 +36,9 @@
     <string name="action_settings">Settings</string>
     <string name="phone">Nr. telefon:</string>
     <string name="zip">Cod postal:</string>
-
+    <string name="myPosts">Ofertele mele</string>
+    <string name="myReservations">Rezervarile mele</string>
+    <string name="avatar">Incarca avatarul</string>
+    <string name="navigation_drawer_open">Open </string>
+    <string name="navigation_drawer_close">Close </string>
 </resources>

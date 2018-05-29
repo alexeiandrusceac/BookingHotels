@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bookinghotels.app.mainActivity.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_app_toolbar"
+        android:layout_width="match_parent"
+
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorAccent"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="55dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#d9d9d9"
+            android:scrollbars="vertical"/>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:id="@+id/postView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="@string/post_View"
+        android:textColor="#fff"
+        android:textSize="15dp"
+        android:visibility="visible"
+        app:layout_anchor="@id/floatingButton"
+        app:layout_anchorGravity="center" />
+</android.support.design.widget.CoordinatorLayout>
