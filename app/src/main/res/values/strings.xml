@@ -25,7 +25,7 @@
     <string name="address">Adresa:</string>
     <string name="price">Pretul:</string>
     <string name="post_View">Ofera</string>
-    <string name="nr_Persons">Numarul de persoane</string>
+    <string name="nr_Persons">Nr. de persoane</string>
     <string name="night_Days">Numarul de nopti</string>
     <string name="reservationText">Rezervare</string>
     <string name="image">Imagine</string>
@@ -41,4 +41,8 @@
     <string name="avatar">Incarca avatarul</string>
     <string name="navigation_drawer_open">Open </string>
     <string name="navigation_drawer_close">Close </string>
+    <string name="separator"> - </string>
+    <string name="period"> Perioada </string>
+    <string name="roomType"> Tipul </string>
+    <string name="roomNumber"> Nr. camerei </string>
 </resources>

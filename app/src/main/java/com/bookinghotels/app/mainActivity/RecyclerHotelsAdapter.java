@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAdapter.ViewHolder> {
     static List<Hotels> dbList;
     static List<Hotels> copyDbList;
     private DatePickerDialog datePicker;
@@ -32,7 +32,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private boolean showContent = true;
     private static DataBaseHelper dataBaseHelper;
     static Context context;
-    RecyclerAdapter(Context context, List<Hotels> dbList ){
+    RecyclerHotelsAdapter(Context context, List<Hotels> dbList ){
         this.dbList = new ArrayList<Hotels>();
         this.context = context;
         this.dbList = dbList;
@@ -41,7 +41,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerHotelsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         final View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_main, null);
         //final CardView cardView = itemLayoutView.findViewById(R.id.cardView);
@@ -62,7 +62,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
 
-    private void showReservationDialog(final String build){
+    private void showReservationDialog(final String hotel){
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View reservationView = layoutInflater.inflate(R.layout.reservation_main,null,false);
 
@@ -78,7 +78,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
        // nameInput.setBackgroundColor(Color.YELLOW);
         /*prenameInput.setText();
         emailInput.setText();
-*/      String titleReservation = context.getResources().getString(R.string.reservationText)+ " la " + build;
+*/      String titleReservation = context.getResources().getString(R.string.reservationText)+ " la " + hotel;
         final String dateFrom = setDate(R.id.dateInInput,reservationView).getText().toString();
         final String dateTo = setDate(R.id.dateOutInput,reservationView).getText().toString();
         new AlertDialog.Builder(context)
@@ -87,7 +87,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 .setPositiveButton("Rezervare", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dataBaseHelper.makeReservation(build,"Ion","Surdu",Integer.parseInt(maxPers.getText().toString()),dateFrom,dateTo);
+                        dataBaseHelper.makeReservation(hotel,"Ion","Surdu",Integer.parseInt(maxPers.getText().toString()),dateFrom,dateTo);
                     }
                 })
                 .setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
@@ -122,7 +122,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return dateEditText;
     }
     @Override
-    public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerHotelsAdapter.ViewHolder holder, int position) {
 
         holder.title.setText(dbList.get(position).Title);
         holder.addres.setText(dbList.get(position).Address);

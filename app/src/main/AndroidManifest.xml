@@ -18,9 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".mainActivity.UserActions.RegisterActivity" android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar"/>
-
-
         <activity android:name=".mainActivity.MainActivity" android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".mainActivity.ReservationActivity" android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

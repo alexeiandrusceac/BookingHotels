@@ -35,6 +35,7 @@ import android.view.View;
 import android.widget.Button;
 
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -47,22 +48,25 @@ import android.widget.ToggleButton;
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
+import com.bookinghotels.app.mainActivity.Reservations.Reservations;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         NavigationView.OnNavigationItemSelectedListener {
-    // private static SearchView searchFilter;
+
     private static DataBaseHelper dbHelper;
     private static List<Hotels> listOfHotels = new ArrayList<>();
+
     // private static CardView cardView;
     //private static Button filterButton;
     private FloatingActionButton floatingButton;
     //private RelativeLayout relativeLayoutWithCards;
-    private RecyclerAdapter adapter;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerHotelsAdapter adapter;
+    private RecyclerView recHotelsView;
+    private RecyclerView.LayoutManager layoutHotelsManager;
+
     //private TextView postView;
     //private DatePickerDialog datePicker;
     public View postMainView;
@@ -70,32 +74,43 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private Toolbar toolbar;
     //private ImageView userImageView;
     private DrawerLayout drawerLayout;
-
+    protected FrameLayout frameLayout;
+    private View view;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+    private LayoutInflater layoutInflater;
     private static int RESULT_LOAD_IMAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        toolbar = (Toolbar) findViewById(R.id.main_app_toolbar);
-        setSupportActionBar(toolbar);
-
-        //postView = (TextView) findViewById(R.id.postView);
-
-        floatingButton = (FloatingActionButton) findViewById(R.id.floatingButton);
+        layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = layoutInflater.inflate(R.layout.main_bar_activity, frameLayout);
 
         dbHelper = new DataBaseHelper(MainActivity.this);
-
+        listOfHotels = dbHelper.getHotels();
+        toolbar = view.findViewById(R.id.main_app_toolbar);
+        setSupportActionBar(toolbar);
+        //postView = view.findViewById(R.id.postView);
+        floatingButton =  view.findViewById(R.id.floatingButton);
+        frameLayout = view.findViewById(R.id.content_frame);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-
-
-
         setupDrawer();
-        listOfHotels = dbHelper.getHotels();
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPostDialog();
+            }
+        });
+        refreshHotelsData();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
+
        /* filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,19 +121,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         //userImageView = (ImageView) findViewById(R.id.nav_header_imageView);
 
-
-        refreshData();
-        floatingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPostDialog();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
     }
+
+
+
     private void setupDrawer() {
-        toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+        toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
@@ -135,9 +143,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         };
 
-       toggle.setDrawerIndicatorEnabled(true);
+        toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(toggle);
     }
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -189,15 +198,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         return super.onOptionsItemSelected(item);
     }
 
-    public void refreshData() {
-        recyclerView = (RecyclerView) findViewById(R.id.recycleview);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(MainActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecyclerAdapter(MainActivity.this, listOfHotels);
-        recyclerView.setAdapter(adapter);
-
+    public void refreshHotelsData() {
+        recHotelsView = view.findViewById(R.id.recycleview);
+        recHotelsView.setHasFixedSize(true);
+        layoutHotelsManager = new LinearLayoutManager(MainActivity.this);
+        recHotelsView.setLayoutManager(layoutHotelsManager);
+        adapter = new RecyclerHotelsAdapter(MainActivity.this, listOfHotels);
+        recHotelsView.setAdapter(adapter);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -258,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         }).show();
         listOfHotels = dbHelper.getHotels();
-        refreshData();
+        refreshHotelsData();
     }
 
     private void showFilterDialog(View view) {
@@ -309,10 +318,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.myPosts:
+
                 Toast.makeText(MainActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.myReservations:
                 Toast.makeText(MainActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
+                Intent reservationIntent = new Intent(getApplicationContext(), ReservationActivity.class);
+                startActivity(reservationIntent);
                 break;
             default:
                 return false;

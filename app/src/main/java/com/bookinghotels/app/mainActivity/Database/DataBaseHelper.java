@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
+import com.bookinghotels.app.mainActivity.Reservations.Reservations;
 import com.bookinghotels.app.mainActivity.UserActions.User.User;
 
 import java.util.ArrayList;
@@ -34,8 +35,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Tabelul cu hotele
     private static String HOTEL_TABLE_NAME = "Hotels";
     private static String HOTEL_ID = "Id_Hotel";
-    private static String HOTEL_ADMIN_ID = "Id_Admin";
-    private static String HOTEL_ROOM_ID = "Id_Room";
+    private static String HOTEL_ADMIN_ID = "Id_AdminHotel";
+    private static String HOTEL_ROOM_ID = "Id_RoomHotel";
     private static String HOTEL_TITLE = "Title";
     private static String HOTEL_RATING = "Rating";
     private static String HOTEL_ADDRESS = "Address";
@@ -47,9 +48,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     //Tabelul cu rezervari
     private static String RESERV_TABLE_NAME = "Reservation";
     private static String RESERV_ID = "Id_Reserv";
-    private static String RESERV_GUEST_ID = "Id_Guest";
-    private static String RESERV_ROOM_ID = "Id_Room";
-    private static String RESERV_HOTEL_ID = "Id_Hotel";
+    private static String RESERV_GUEST_ID = "Id_GuestReserv";
+    private static String RESERV_ROOM_ID = "Id_RoomReserv";
+    private static String RESERV_HOTEL_ID = "Id_HotelReserv";
     private static String RESERV_DATE_IN = "DateIn";
     private static String RESERV_DATE_OUT = "DateOut";
     private static String RESERV_NR_PERS = "Nr_Person";
@@ -58,11 +59,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     //Tabelul cu camere
     private static String ROOM_TABLE_NAME = "Room";
     private static String ROOM_ID = "Id_Room";
-    private static String ROOM_HOTEL_ID = "Id_Hotel";
+    private static String ROOM_HOTEL_ID = "Id_HotelRoom";
     private static String ROOM_NUMBER = "RoomNr";
     private static String ROOM_TYPE = "RoomType";
     private static String ROOM_PRICE = "RoomPrice";
     //Tabelul cu camere
+    // Operation to Reservation tabel
+    private final String GET_RESERVATIONS =
+            "SELECT * FROM "+ RESERV_TABLE_NAME +
+                    " INNER JOIN " + HOTEL_TABLE_NAME + " ON "+ RESERV_HOTEL_ID + " = " + HOTEL_ID +
+                    " INNER JOIN " + ROOM_TABLE_NAME + " ON "+ RESERV_ROOM_ID + " = "+ ROOM_ID +
+                    " INNER JOIN " + USER_TABLE_NAME + " ON "+ RESERV_GUEST_ID + " = "+ USER_ID + " WHERE " + RESERV_GUEST_ID +" =?";
+    // Operation to Reservation tabel
     private SQLiteDatabase sqLiteDatabase;
 
     public DataBaseHelper(Context context) {
@@ -94,6 +102,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /********************************************************************RESERVATIONS_TABLE********************************************************************************************/
     private String CREATE_RESERV_TABLE = "CREATE TABLE " + RESERV_TABLE_NAME + "(" + RESERV_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + RESERV_HOTEL_ID + " INTEGER," + RESERV_ROOM_ID + " INTEGER," + RESERV_GUEST_ID + " INTEGER, " + RESERV_DATE_IN + " TEXT," + RESERV_DATE_OUT + " TEXT, "
             + RESERV_NR_PERS + " INTEGER" + ")";
+    private String INSERT_RESERV_TABLE = "INSERT INTO "+ RESERV_TABLE_NAME + "(" +
+            RESERV_GUEST_ID + " , " + RESERV_ROOM_ID +  " , "+ RESERV_HOTEL_ID + " , "+ RESERV_DATE_IN + " , "+
+            RESERV_DATE_OUT + " , " + RESERV_NR_PERS + ")"+ " VALUES ("
+            + "'1'" + " , "+ "'1'" + " , " + "'1'" + " , "+ "'10/01/2001'" + " , " + "'15/01/2001'" + " , "+ "'5'" + ")";
     /********************************************************************RESERVATIONS_TABLE********************************************************************************************/
 
 
@@ -105,7 +117,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /********************************************************************USERS_TABLE********************************************************************************************/
 
     /********************************************************************ROOMS_TABLE********************************************************************************************/
-    private String CREATE_ROOM_TABLE = "CREATE TABLE " + ROOM_TABLE_NAME + "(" + ROOM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ROOM_HOTEL_ID + "INTEGER, " + ROOM_NUMBER + " INTEGER," + ROOM_TYPE + " TEXT," + ROOM_PRICE + " REAL " + ")";
+    private String CREATE_ROOM_TABLE = "CREATE TABLE " + ROOM_TABLE_NAME + "(" + ROOM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ROOM_HOTEL_ID + " INTEGER, " + ROOM_NUMBER + " INTEGER,"
+            + ROOM_TYPE + " TEXT," + ROOM_PRICE + " INTEGER " + ")";
     private String INSERT_ROOM_TABLE = "INSERT INTO " + ROOM_TABLE_NAME + "(" + ROOM_HOTEL_ID + ", " + ROOM_NUMBER + ", " + ROOM_TYPE + ", " + ROOM_PRICE + ")" +
             "VALUES (" + "'1'" + ", " + "'100'" + ", " + "'standard'" + ", " + "'150'" + ")," +
             "(" + "'1'" + ", " + "'101'" + ", " + "'standard'" + ", " + "'170'" + ")," +
@@ -178,7 +191,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.close();
         Log.d(TAG, String.format("Utilizatorul cu numele " + USER_NAME + " " + USER_PRENAME + " s-a inregistrat cu succes"));
     }
-    public User getUser(String userName, String password)
+    /*public User getUser(String userName, String password)
     {
         User user = new User();
         sqLiteDatabase = this.getReadableDatabase();
@@ -198,17 +211,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.close();
         return user;
-    }
+    }*/
     /*******************************************************************************UTILIZATOR************************************************************/
     @Override
     public void onCreate(SQLiteDatabase db) {
-         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_USER_TABLE);
         db.execSQL(INSERT_USER_TABLE);
         db.execSQL(CREATE_HOTEL_TABLE);
         db.execSQL(INSERT_HOTEL_TABLE);
-        //db.execSQL(CREATE_RESERV_TABLE);
-        //db.execSQL(CREATE_ROOM_TABLE);
-       // db.execSQL(INSERT_ROOM_TABLE);
+        db.execSQL(CREATE_RESERV_TABLE);
+        db.execSQL(INSERT_RESERV_TABLE);
+        db.execSQL(CREATE_ROOM_TABLE);
+        db.execSQL(INSERT_ROOM_TABLE);
     }
 
     @Override
@@ -246,7 +260,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.close();
 
         return listOfHotels;
-//asduhaudha
+
     }
 
     public void insertHotel(int idRoom, int idAdmin, String title, float rating, String address, int image, String zip, String phone) {
@@ -291,7 +305,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return listOfHotelsByName;
     }*/
 
-    public List<Hotels> getHotelsByFilter(Hotels hFilter, int priceFrom, int priceTo) {
+    /*public List<Hotels> getHotelsByFilter(Hotels hFilter, int priceFrom, int priceTo) {
         List<Hotels> listOfHotels = new ArrayList<>();
 
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -317,7 +331,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return listOfHotels;
 
-    }
+    }*/
 
     /*************************************************************************HOTELS ACTIONS*********************************************************/
 
@@ -336,4 +350,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.close();
     }
 
+    public List<Reservations> getReservations(int curUserId)
+    {
+        List<Reservations> reservationsList = new ArrayList<>();
+        sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursorReserv = sqLiteDatabase.rawQuery(GET_RESERVATIONS,new String[]{String.valueOf(curUserId)} );
+
+        if(cursorReserv.moveToFirst())
+        {
+            do{
+                Reservations reservation = new Reservations();
+                reservation.Id_Reserv = cursorReserv.getInt(cursorReserv.getColumnIndex(RESERV_ID));
+                reservation.HotelAddress = cursorReserv.getString(cursorReserv.getColumnIndex(HOTEL_ADDRESS));
+                reservation.HotelTitle = cursorReserv.getString(cursorReserv.getColumnIndex(HOTEL_TITLE));
+                reservation.RoomNumber = cursorReserv.getInt(cursorReserv.getColumnIndex(ROOM_NUMBER));
+                reservation.RoomPrice = cursorReserv.getInt(cursorReserv.getColumnIndex(ROOM_PRICE));
+                reservation.RoomType = cursorReserv.getString(cursorReserv.getColumnIndex(ROOM_TYPE));
+                reservation.DateIn = cursorReserv.getString(cursorReserv.getColumnIndex(RESERV_DATE_IN));
+                reservation.DateOut = cursorReserv.getString(cursorReserv.getColumnIndex(RESERV_DATE_OUT));
+                reservation.NrPers = cursorReserv.getInt(cursorReserv.getColumnIndex(RESERV_NR_PERS));
+                reservationsList.add(reservation);
+            }
+            while(cursorReserv.moveToNext());
+        }
+        sqLiteDatabase.close();
+        return reservationsList;
+    }
 }
