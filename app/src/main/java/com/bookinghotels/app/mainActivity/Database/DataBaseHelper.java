@@ -75,7 +75,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private final String GET_AVAILABLEROOM =
             "SELECT * FROM " + ROOM_TABLE_NAME + " INNER JOIN " + RESERV_TABLE_NAME + " ON " + ROOM_ID + " != " + RESERV_ROOM_ID + " WHERE "
-                    + ROOM_HOTEL_ID + "= ?" + " AND " + " ? <= " + ROOM_PRICE + " <= " + " ? ";
+                    + ROOM_HOTEL_ID + "= ?" + " AND " + ROOM_PRICE + " BETWEEN ? AND ?";
     private SQLiteDatabase sqLiteDatabase;
 
     public DataBaseHelper(Context context) {
@@ -409,36 +409,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return reservationsList;
     }
 
-    public String[] getAvailableRooms(int hotelID, int fromPrice, int toPrice) {
-        //List<Rooms> listOfRooms = new ArrayList<Rooms>();
-        String[] arrayOfString = new String[]{};
+    public ArrayList<String> getAvailableRooms(int hotelID, int fromPrice, int toPrice) {
         sqLiteDatabase = this.getReadableDatabase();
         Cursor cursorRoom = sqLiteDatabase.rawQuery(GET_AVAILABLEROOM, new String[]{String.valueOf(hotelID), String.valueOf(fromPrice), String.valueOf(toPrice)});
+        ArrayList<String> listOfdata = new ArrayList<String>();
         if (cursorRoom.moveToFirst()) {
+        do {
+                String data = cursorRoom.getString(cursorRoom.getColumnIndex(ROOM_NUMBER));
+                listOfdata.add(data);
 
-            do {
-
-                arrayOfString.length = cursorRoom.getCount();
-
-
-
-            }
-            while (cursorRoom.moveToNext())
-        } ;
-
-       /* if (cursorRoom.moveToFirst()) {
-            do {
-                Rooms room = new Rooms();
-                room.Id_Hotel = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_HOTEL_ID));
-                room.Id_Room = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_ID));
-                room.RoomNumber = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_NUMBER));
-                room.RoomPrice = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_PRICE));
-                room.RoomType = cursorRoom.getString(cursorRoom.getColumnIndex(ROOM_TYPE));
-                listOfRooms.add(room);
             }
             while (cursorRoom.moveToNext());
-        }*/
+        }
+
         sqLiteDatabase.close();
-        return listOfRooms;
+        return listOfdata;
     }
 }

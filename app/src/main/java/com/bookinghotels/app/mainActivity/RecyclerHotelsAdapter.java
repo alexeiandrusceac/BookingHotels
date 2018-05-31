@@ -40,12 +40,14 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
     private boolean showContent = true;
     private static DataBaseHelper dataBaseHelper;
     static Context context;
-    RecyclerHotelsAdapter(Context context, List<Hotels> dbList ){
+
+    RecyclerHotelsAdapter(Context context, List<Hotels> dbList) {
         this.dbList = new ArrayList<Hotels>();
         this.context = context;
         this.dbList = dbList;
-        copyDbList  = new ArrayList<Hotels>();
+        copyDbList = new ArrayList<Hotels>();
         copyDbList.addAll(dbList);
+        dataBaseHelper = new DataBaseHelper(context);
     }
 
     @Override
@@ -58,9 +60,9 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
         reservationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String hotelTitle = ((TextView)itemLayoutView.findViewById(R.id.titleView)).getText().toString();
+                String hotelTitle = ((TextView) itemLayoutView.findViewById(R.id.titleView)).getText().toString();
 
-                showReservationDialog(hotelTitle,idHotel);
+                showReservationDialog(hotelTitle, idHotel);
             }
         });
 
@@ -70,40 +72,41 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
     }
 
 
-    private void showReservationDialog(final String hotel, final int hotelId){
-        LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View reservationView = layoutInflater.inflate(R.layout.reservation_main,null,false);
+    private void showReservationDialog(final String hotel, final int hotelId) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View reservationView = layoutInflater.inflate(R.layout.reservation_main, null, false);
 
-        final EditText nameInput = (EditText)reservationView.findViewById(R.id.nameEditAutoFill);
-        final EditText prenameInput = (EditText)reservationView.findViewById(R.id.prenameEditAFill);
-        final EditText emailInput = (EditText)reservationView.findViewById(R.id.addressEditAFill);
-        final EditText fromDateInput = (EditText)reservationView.findViewById(R.id.dateInInput);
-        final EditText toDateInput = (EditText)reservationView.findViewById(R.id.dateOutInput);
-        final EditText maxPers= (EditText)reservationView.findViewById(R.id.personEditAFill);
-        final RangeSeekBar rangeSeekBar =  (RangeSeekBar) reservationView.findViewById(R.id.rangeSeekbar);
-        final TextView fromPrice = (TextView)reservationView.findViewById(R.id.from_Price_View);
-        final TextView toPrice = (TextView)reservationView.findViewById(R.id.to_Price_View);
-        final TextView separator = (TextView)reservationView.findViewById(R.id.separatorView);
-        String titleReservation = context.getResources().getString(R.string.reservationText)+ " la " + hotel;
-        final String dateFrom = setDate(R.id.dateInInput,reservationView).getText().toString();
-        final String dateTo = setDate(R.id.dateOutInput,reservationView).getText().toString();
-        final Spinner roomSpinner =  reservationView.findViewById(R.id.roomNumberViewSpinner);
+        final EditText nameInput = (EditText) reservationView.findViewById(R.id.nameEditAutoFill);
+        final EditText prenameInput = (EditText) reservationView.findViewById(R.id.prenameEditAFill);
+        final EditText emailInput = (EditText) reservationView.findViewById(R.id.addressEditAFill);
+        final EditText fromDateInput = (EditText) reservationView.findViewById(R.id.dateInInput);
+        final EditText toDateInput = (EditText) reservationView.findViewById(R.id.dateOutInput);
+        final EditText maxPers = (EditText) reservationView.findViewById(R.id.personEditAFill);
+        final RangeSeekBar rangeSeekBar = (RangeSeekBar) reservationView.findViewById(R.id.rangeSeekbar);
+        final TextView fromPrice = (TextView) reservationView.findViewById(R.id.from_Price_View);
+        final TextView toPrice = (TextView) reservationView.findViewById(R.id.to_Price_View);
+        final TextView separator = (TextView) reservationView.findViewById(R.id.separatorView);
+        String titleReservation = context.getResources().getString(R.string.reservationText) + " la " + hotel;
+        final String dateFrom = setDate(R.id.dateInInput, reservationView).getText().toString();
+        final String dateTo = setDate(R.id.dateOutInput, reservationView).getText().toString();
+        final Spinner roomSpinner = reservationView.findViewById(R.id.roomNumberViewSpinner);
 
         rangeSeekBar.setNotifyWhileDragging(true);
-        rangeSeekBar.setRangeValues(0,50000);
+        rangeSeekBar.setRangeValues(0, 50000);
         rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Integer minValue, Integer maxValue) {
                 //Now you have the minValue and maxValue of your RangeSeekbar
-                List<Rooms> list = new ArrayList<>();
+                ArrayList<String> list = new ArrayList<String>();
                 fromPrice.setText(String.valueOf(minValue));
                 toPrice.setText(String.valueOf(maxValue));
 
-                list = dataBaseHelper.getAvailableRooms(hotelId,Integer.parseInt(fromPrice.getText().toString()),Integer.parseInt(toPrice.getText().toString()));
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_spinner_item,
-                        (new String[]));
-                roomSpinner = ;
+                list = dataBaseHelper.getAvailableRooms(hotelId, minValue, maxValue);
+                if (list != null) {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+                            android.R.layout.simple_spinner_item, list);
+                    roomSpinner.setAdapter(adapter);
+                }
             }
         });
 
@@ -114,7 +117,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
                 .setPositiveButton("Rezervare", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dataBaseHelper.makeReservation(hotel,"Ion","Surdu",Integer.parseInt(maxPers.getText().toString()),dateFrom,dateTo);
+                        dataBaseHelper.makeReservation(hotel, "Ion", "Surdu", Integer.parseInt(maxPers.getText().toString()), dateFrom, dateTo);
                     }
                 })
                 .setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
@@ -125,7 +128,8 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
                 }).show();
 
     }
-    public EditText setDate(int element,View dateView) {
+
+    public EditText setDate(int element, View dateView) {
 
         final EditText dateEditText = (EditText) dateView.findViewById(element);
         dateEditText.setInputType(InputType.TYPE_NULL);
@@ -148,6 +152,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
         });
         return dateEditText;
     }
+
     @Override
     public void onBindViewHolder(RecyclerHotelsAdapter.ViewHolder holder, int position) {
 
@@ -167,35 +172,31 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView title,addres,rating,phone,zip;
+        public TextView title, addres, rating, phone, zip;
         public ImageView image;
+
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
             title = (TextView) itemLayoutView.findViewById(R.id.titleView);
-            zip = (TextView)itemLayoutView.findViewById(R.id.zipView);
-            addres = (TextView)itemLayoutView.findViewById(R.id.addressView);
-            rating = (TextView)itemLayoutView.findViewById(R.id.ratingView);
-            image = (ImageView)itemLayoutView.findViewById(R.id.imageView);
-            phone = (TextView)itemLayoutView.findViewById(R.id.phoneView);
+            zip = (TextView) itemLayoutView.findViewById(R.id.zipView);
+            addres = (TextView) itemLayoutView.findViewById(R.id.addressView);
+            rating = (TextView) itemLayoutView.findViewById(R.id.ratingView);
+            image = (ImageView) itemLayoutView.findViewById(R.id.imageView);
+            phone = (TextView) itemLayoutView.findViewById(R.id.phoneView);
 
         }
 
     }
-    public void filter(String queryText)
-    {
+
+    public void filter(String queryText) {
         dbList.clear();
 
-        if(queryText.isEmpty())
-        {
+        if (queryText.isEmpty()) {
             dbList.addAll(copyDbList);
-        }
-        else
-        {
+        } else {
 
-            for(Hotels name: copyDbList)
-            {
-                if(name.Title.toLowerCase().contains(queryText.toLowerCase()))
-                {
+            for (Hotels name : copyDbList) {
+                if (name.Title.toLowerCase().contains(queryText.toLowerCase())) {
                     dbList.add(name);
                 }
             }
