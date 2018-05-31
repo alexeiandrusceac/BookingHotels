@@ -1,7 +1,7 @@
 package com.bookinghotels.app.mainActivity;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.os.PersistableBundle;
+
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,12 +22,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 
+import android.util.Range;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,17 +39,18 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
+
 
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
+
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
-import com.bookinghotels.app.mainActivity.Reservations.Reservations;
+import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.main_frame);
         layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         dbHelper = new DataBaseHelper(MainActivity.this);
@@ -94,7 +96,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
 
-        view = layoutInflater.inflate(R.layout.main_bar_activity, frameLayout);
+
+
+// Get noticed while dragging
+
+
+        view = layoutInflater.inflate(R.layout.main_content_activity, frameLayout);
 
         toolbar = view.findViewById(R.id.main_app_toolbar);
         setSupportActionBar(toolbar);
@@ -139,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
 
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu();
             }
         };
 
@@ -318,16 +325,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.home:
+                Toast.makeText(MainActivity.this,"Ati ajuns acasa",Toast.LENGTH_SHORT).show();
+                Intent homeActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(homeActivity);
+                break;
             case R.id.myPosts:
-
                 Toast.makeText(MainActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
                 Intent postIntent= new Intent(getApplicationContext(),PostActivity.class);
-
+                getSupportActionBar().setTitle(MainActivity.this.getResources().getString(R.string.post_View));
                 startActivity(postIntent);
                 break;
             case R.id.myReservations:
                 Toast.makeText(MainActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
                 Intent reservationIntent = new Intent(getApplicationContext(), ReservationActivity.class);
+                getSupportActionBar().setTitle(MainActivity.this.getResources().getString(R.string.reservationText));
                 startActivity(reservationIntent);
                 break;
             default:

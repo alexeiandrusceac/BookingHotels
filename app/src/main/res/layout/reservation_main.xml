@@ -1,173 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:rsb="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayoutReservation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/datePeriod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="14dp"
+            android:paddingTop="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dateIn"
+                android:textColor="#000000"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/dateInInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dateOut"
+                android:textColor="#000000"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/dateOutInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:textSize="12dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/roomPriceLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingTop="14dp">
+
+        <TextView
+            android:id="@+id/roomPriceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/from_Price"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+        <TextView
+            android:id="@+id/from_Price_View"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:textSize="17sp" />
+        <TextView
+            android:id="@+id/separatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/separator"
+            android:textSize="17sp" />
+        <TextView
+            android:id="@+id/to_Price_View"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+            android:id="@+id/rangeSeekbar"
+            android:layout_below="@id/roomPriceLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            rsb:absoluteMaxValue="10000"
+            rsb:absoluteMinValue="0" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/roomLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingTop="14dp">
+
+        <TextView
+            android:id="@+id/roomNumberLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/roomNumber"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <Spinner
+            android:id="@+id/roomNumberViewSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/nameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="14dp"
             android:text="@string/user_name"
-            android:textSize="17sp"
             android:textColor="#000000"
-            android:layout_marginStart="14dp" />
+            android:textSize="17sp" />
 
         <EditText
             android:id="@+id/nameEditAutoFill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
             android:layout_marginRight="14dp"
             android:layout_marginTop="14dp"
-            android:inputType="text"
-            android:layout_marginEnd="14dp" />
+            android:inputType="text" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutPrename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/prenameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="14dp"
             android:text="@string/user_prename"
-            android:textSize="17sp"
             android:textColor="#000000"
-            android:layout_marginStart="14dp" />
+            android:textSize="17sp" />
 
         <EditText
             android:id="@+id/prenameEditAFill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
             android:layout_marginRight="14dp"
             android:layout_marginTop="14dp"
-            android:inputType="text"
-            android:layout_marginEnd="14dp" />
+            android:inputType="text" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/addressText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="14dp"
             android:text="@string/email"
-            android:textSize="17sp"
             android:textColor="#000000"
-            android:layout_marginStart="14dp" />
+            android:textSize="17sp" />
 
         <EditText
             android:id="@+id/addressEditAFill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
             android:layout_marginRight="14dp"
             android:layout_marginTop="14dp"
-            android:inputType="textEmailAddress"
-            android:layout_marginEnd="14dp" />
+            android:inputType="textEmailAddress" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutMaxPers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/personText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="14dp"
             android:text="@string/nr_Persons"
-            android:textSize="17sp"
             android:textColor="#000000"
-            android:layout_marginStart="14dp" />
+            android:textSize="17sp" />
 
         <EditText
             android:id="@+id/personEditAFill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
             android:layout_marginRight="14dp"
             android:layout_marginTop="14dp"
-            android:inputType="number"
-            android:layout_marginEnd="14dp" />
+            android:inputType="number" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/datePeriod"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        android:baselineAligned="false">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:paddingLeft="14dp"
-            android:paddingTop="14dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17sp"
-                android:textColor="#000000"
-                android:text="@string/dateIn" />
-
-            <EditText
-                android:id="@+id/dateInInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="12dp"
-                android:inputType="date" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:paddingTop="14dp"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17sp"
-                android:textColor="#000000"
-                android:text="@string/dateOut" />
-
-            <EditText
-                android:id="@+id/dateOutInput"
-                android:layout_width="match_parent"
-                android:textSize="12dp"
-                android:layout_height="wrap_content"
-                android:inputType="date" />
-        </LinearLayout>
-    </LinearLayout>
-    </LinearLayout>
+</LinearLayout>

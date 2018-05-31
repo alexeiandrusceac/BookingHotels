@@ -21,7 +21,7 @@
         android:adjustViewBounds="true"/>
 
     <Spinner
-        android:id="@+id/nav_header_textView"
+        android:id="@+id/nav_header_Spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"

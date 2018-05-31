@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -30,36 +29,35 @@ import com.bookinghotels.app.mainActivity.Reservations.Reservations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReservationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
-        NavigationView.OnNavigationItemSelectedListener{
+public class ReservationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private RecyclerReservationAdapter reservationAdapter;
     private RecyclerView recReservView;
     private RecyclerView.LayoutManager layoutReservManager;
     private List<Reservations> listOfReservations = new ArrayList<>();
     private Toolbar reservToolbar;
-    private DrawerLayout drawerLayout;
-    private FrameLayout frameLayout;
-    private ActionBarDrawerToggle toggle;
-    private NavigationView navigationView;
+    private DrawerLayout drawerReservLayout;
+    private FrameLayout frameReservLayout;
+    private ActionBarDrawerToggle reservToggle;
+    private NavigationView navigationReservView;
     private DataBaseHelper reservHelper;
-    private LayoutInflater layoutInflater;
+    private LayoutInflater layoutReservInflater;
     private View viewReservation;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.main_frame);
 
-        layoutInflater = (LayoutInflater)ReservationActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        frameLayout = (FrameLayout)findViewById(R.id.content_frame);
+        layoutReservInflater = (LayoutInflater)ReservationActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        frameReservLayout = (FrameLayout)findViewById(R.id.content_frame);
         reservHelper = new DataBaseHelper(ReservationActivity.this);
         listOfReservations = reservHelper.getReservations(1);
-        navigationView = (NavigationView)findViewById(R.id.navigationView);
-        navigationView.setNavigationItemSelectedListener(this);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        navigationReservView = (NavigationView)findViewById(R.id.navigationView);
+        navigationReservView.setNavigationItemSelectedListener(this);
+        drawerReservLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
 
-        viewReservation = layoutInflater.inflate(R.layout.reservated_room_main,frameLayout);
+        viewReservation = layoutReservInflater.inflate(R.layout.reservated_content_activity,frameReservLayout);
         reservToolbar = viewReservation.findViewById(R.id.reserv_app_toolbar);
         setSupportActionBar(reservToolbar);
 
@@ -80,42 +78,29 @@ public class ReservationActivity extends AppCompatActivity implements SearchView
     }
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (drawerReservLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerReservLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.searchBar);
-
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint("Cautarea hotelelor");
-        searchView.setOnQueryTextListener(ReservationActivity.this);
-        searchView.setIconified(false);
-
-        return true;
-    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        toggle.onConfigurationChanged(newConfig);
+        reservToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        toggle.syncState();
+        reservToggle.syncState();
     }
 
     private void setupDrawer() {
-        toggle = new ActionBarDrawerToggle(ReservationActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+        reservToggle = new ActionBarDrawerToggle(ReservationActivity.this, drawerReservLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
@@ -132,44 +117,29 @@ public class ReservationActivity extends AppCompatActivity implements SearchView
             }
         };
 
-        toggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.addDrawerListener(toggle);
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.searchBar) {
-            return true;
-        } else if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        reservToggle.setDrawerIndicatorEnabled(true);
+        drawerReservLayout.addDrawerListener(reservToggle);
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(this, "Query Inserted", Toast.LENGTH_SHORT).show();
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        reservationAdapter.filter(newText);
-        return true;
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.home:
+                Toast.makeText(ReservationActivity.this,"Ati ajuns acasa",Toast.LENGTH_SHORT).show();
+                Intent homeActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(homeActivity);
+                break;
             case R.id.myPosts:
                 Toast.makeText(ReservationActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
+                Intent postIntent= new Intent(getApplicationContext(),PostActivity.class);
+                getSupportActionBar().setTitle(ReservationActivity.this.getResources().getString(R.string.post_View));
+                startActivity(postIntent);
                 break;
             case R.id.myReservations:
                 Toast.makeText(ReservationActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
                 Intent reservationIntent = new Intent (getApplicationContext(), ReservationActivity.class);
+                getSupportActionBar().setTitle(ReservationActivity.this.getResources().getString(R.string.reservationText));
                 startActivity(reservationIntent);
                 break;
             default:

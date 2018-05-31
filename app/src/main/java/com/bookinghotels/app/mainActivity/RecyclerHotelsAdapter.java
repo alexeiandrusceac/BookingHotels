@@ -6,18 +6,26 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Range;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
+import com.bookinghotels.app.mainActivity.Rooms.Rooms;
+import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +36,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
     static List<Hotels> dbList;
     static List<Hotels> copyDbList;
     private DatePickerDialog datePicker;
-
+    private int idHotel = 0;
     private boolean showContent = true;
     private static DataBaseHelper dataBaseHelper;
     static Context context;
@@ -52,7 +60,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
             public void onClick(View v) {
                 String hotelTitle = ((TextView)itemLayoutView.findViewById(R.id.titleView)).getText().toString();
 
-                showReservationDialog(hotelTitle);
+                showReservationDialog(hotelTitle,idHotel);
             }
         });
 
@@ -62,10 +70,9 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
     }
 
 
-    private void showReservationDialog(final String hotel){
+    private void showReservationDialog(final String hotel, final int hotelId){
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View reservationView = layoutInflater.inflate(R.layout.reservation_main,null,false);
-
 
         final EditText nameInput = (EditText)reservationView.findViewById(R.id.nameEditAutoFill);
         final EditText prenameInput = (EditText)reservationView.findViewById(R.id.prenameEditAFill);
@@ -73,14 +80,34 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
         final EditText fromDateInput = (EditText)reservationView.findViewById(R.id.dateInInput);
         final EditText toDateInput = (EditText)reservationView.findViewById(R.id.dateOutInput);
         final EditText maxPers= (EditText)reservationView.findViewById(R.id.personEditAFill);
-
-        //nameInput.setText("VANEA");
-       // nameInput.setBackgroundColor(Color.YELLOW);
-        /*prenameInput.setText();
-        emailInput.setText();
-*/      String titleReservation = context.getResources().getString(R.string.reservationText)+ " la " + hotel;
+        final RangeSeekBar rangeSeekBar =  (RangeSeekBar) reservationView.findViewById(R.id.rangeSeekbar);
+        final TextView fromPrice = (TextView)reservationView.findViewById(R.id.from_Price_View);
+        final TextView toPrice = (TextView)reservationView.findViewById(R.id.to_Price_View);
+        final TextView separator = (TextView)reservationView.findViewById(R.id.separatorView);
+        String titleReservation = context.getResources().getString(R.string.reservationText)+ " la " + hotel;
         final String dateFrom = setDate(R.id.dateInInput,reservationView).getText().toString();
         final String dateTo = setDate(R.id.dateOutInput,reservationView).getText().toString();
+        final Spinner roomSpinner =  reservationView.findViewById(R.id.roomNumberViewSpinner);
+
+        rangeSeekBar.setNotifyWhileDragging(true);
+        rangeSeekBar.setRangeValues(0,50000);
+        rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Integer minValue, Integer maxValue) {
+                //Now you have the minValue and maxValue of your RangeSeekbar
+                List<Rooms> list = new ArrayList<>();
+                fromPrice.setText(String.valueOf(minValue));
+                toPrice.setText(String.valueOf(maxValue));
+
+                list = dataBaseHelper.getAvailableRooms(hotelId,Integer.parseInt(fromPrice.getText().toString()),Integer.parseInt(toPrice.getText().toString()));
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                        android.R.layout.simple_spinner_item,
+                        (new String[]));
+                roomSpinner = ;
+            }
+        });
+
+
         new AlertDialog.Builder(context)
                 .setTitle(titleReservation)
                 .setView(reservationView)
@@ -128,9 +155,9 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
         holder.addres.setText(dbList.get(position).Address);
         holder.zip.setText(dbList.get(position).Zip);
         holder.rating.setText(String.valueOf(dbList.get(position).Rating));
-       // holder.price.setText(String.valueOf(dbList.get(position).Price));
         holder.image.setImageResource(dbList.get(position).Image);
         holder.phone.setText(dbList.get(position).Phone);
+        idHotel = dbList.get(position).Id_hotel;
     }
 
     @Override
@@ -140,7 +167,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView title,addres,rating,price,phone,zip;
+        public TextView title,addres,rating,phone,zip;
         public ImageView image;
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
@@ -148,7 +175,6 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
             zip = (TextView)itemLayoutView.findViewById(R.id.zipView);
             addres = (TextView)itemLayoutView.findViewById(R.id.addressView);
             rating = (TextView)itemLayoutView.findViewById(R.id.ratingView);
-            //price = (TextView)itemLayoutView.findViewById(R.id.priceView);
             image = (ImageView)itemLayoutView.findViewById(R.id.imageView);
             phone = (TextView)itemLayoutView.findViewById(R.id.phoneView);
 

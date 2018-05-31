@@ -38,7 +38,7 @@
     <string name="zip">Cod postal:</string>
     <string name="myPosts">Ofertele mele</string>
     <string name="myReservations">Rezervarile mele</string>
-
+    <string name="home">Acasa</string>
     <string name="navigation_drawer_open">Open </string>
     <string name="navigation_drawer_close">Close </string>
     <string name="separator"> - </string>

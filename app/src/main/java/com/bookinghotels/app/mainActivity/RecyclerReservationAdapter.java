@@ -9,11 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bookinghotels.app.R;
-import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 import com.bookinghotels.app.mainActivity.Reservations.Reservations;
-
+import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
 
 import java.util.ArrayList;
@@ -22,19 +22,19 @@ import java.util.List;
 public class RecyclerReservationAdapter extends RecyclerView.Adapter<RecyclerReservationAdapter.ViewHolder> {
         private List<Reservations> reservationsList;
         static Context context;
-        private List<Reservations> dbCopyReservList;
+
 
     RecyclerReservationAdapter(Context context, List<Reservations> reservationsList)
     {
         this.reservationsList = new ArrayList<Reservations>();
         this.reservationsList = reservationsList;
         this.context = context;
-        dbCopyReservList = new ArrayList<Reservations>();
-        dbCopyReservList.addAll(reservationsList);
+
     }
     @Override
     public RecyclerReservationAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View reservationView = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_reservation_main,null);
+        final View reservationView = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_reservated_main,null);
+
         ViewHolder viewholder =new ViewHolder(reservationView);
         return  viewholder;
     }
@@ -52,6 +52,7 @@ public class RecyclerReservationAdapter extends RecyclerView.Adapter<RecyclerRes
             dateIn = (TextView)reservationLayoutView.findViewById(R.id.dateInView);
             dateOut = (TextView) reservationLayoutView.findViewById(R.id.dateOutView);
             nrPers = (TextView)reservationLayoutView.findViewById(R.id.nrPersView);
+
 
         }
 
@@ -73,26 +74,5 @@ public class RecyclerReservationAdapter extends RecyclerView.Adapter<RecyclerRes
     public int getItemCount() {
         return reservationsList.size();
     }
-    public void filter(String hotel)
-    {
-        reservationsList.clear();
 
-        if(hotel.isEmpty())
-        {
-            reservationsList.addAll(dbCopyReservList);
-        }
-        else
-        {
-            for(Reservations name: dbCopyReservList)
-            {
-                if(name.HotelTitle.toLowerCase().contains(hotel.toLowerCase()))
-                {
-                    reservationsList.add(name);
-                }
-            }
-
-        }
-
-        notifyDataSetChanged();
-    }
 }
