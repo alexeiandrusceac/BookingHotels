@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,97 +27,58 @@ import android.widget.Toast;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
-import com.bookinghotels.app.mainActivity.Reservations.Reservations;
+import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReservationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
-        NavigationView.OnNavigationItemSelectedListener{
-
-    private RecyclerReservationAdapter reservationAdapter;
-    private RecyclerView recReservView;
-    private RecyclerView.LayoutManager layoutReservManager;
-    private List<Reservations> listOfReservations = new ArrayList<>();
-    private Toolbar reservToolbar;
-    private DrawerLayout drawerLayout;
+public class PostActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, NavigationView.OnNavigationItemSelectedListener{
+    private DataBaseHelper postHelper;
+    private RecyclerView recPostsView;
     private FrameLayout frameLayout;
+    private RecyclerHotelsAdapter adapter;
+    private LayoutInflater layoutInflater;
+    private RecyclerView.LayoutManager layoutPostsManager;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private DataBaseHelper reservHelper;
-    private LayoutInflater layoutInflater;
-    private View viewReservation;
+    private DrawerLayout drawerLayout;
+    private View postView;
+    private List<Hotels> listOfPosts = new ArrayList<Hotels>();
+    private Toolbar postToolbar;
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
-        layoutInflater = (LayoutInflater)ReservationActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater = (LayoutInflater)PostActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameLayout = (FrameLayout)findViewById(R.id.content_frame);
-        reservHelper = new DataBaseHelper(ReservationActivity.this);
-        listOfReservations = reservHelper.getReservations(1);
+        postHelper = new DataBaseHelper(PostActivity.this);
+        listOfPosts = postHelper.getHotels(1);
         navigationView = (NavigationView)findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
+        postView = layoutInflater.inflate(R.layout.main_bar_activity,frameLayout);
 
-        viewReservation = layoutInflater.inflate(R.layout.reservated_room_main,frameLayout);
-        reservToolbar = viewReservation.findViewById(R.id.reserv_app_toolbar);
-        setSupportActionBar(reservToolbar);
-
-        refreshReservData();
+        postToolbar = postView.findViewById(R.id.post_app_toolbar);
+        setSupportActionBar(postToolbar);
+        refreshPostData();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-    }
-
-    public void refreshReservData() {
-
-        recReservView = (RecyclerView) findViewById(R.id.reservatedRecycleView);
-        recReservView.setHasFixedSize(true);
-        layoutReservManager = new LinearLayoutManager(ReservationActivity.this);
-        recReservView.setLayoutManager(layoutReservManager);
-        reservationAdapter = new RecyclerReservationAdapter(ReservationActivity.this, listOfReservations);
-        recReservView.setAdapter(reservationAdapter);
 
     }
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.searchBar);
-
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint("Cautarea hotelelor");
-        searchView.setOnQueryTextListener(ReservationActivity.this);
-        searchView.setIconified(false);
-
-        return true;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        toggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        toggle.syncState();
+    private void refreshPostData()
+    {
+        recPostsView = (RecyclerView)findViewById(R.id.postRecyclerView);
+        recPostsView.setHasFixedSize(true);
+        layoutPostsManager = new LinearLayoutManager(PostActivity.this);
+        recPostsView.setLayoutManager(layoutPostsManager);
+        adapter = new RecyclerHotelsAdapter(PostActivity.this, listOfPosts);
+        recPostsView.setAdapter(adapter);
     }
 
     private void setupDrawer() {
-        toggle = new ActionBarDrawerToggle(ReservationActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+        toggle = new ActionBarDrawerToggle(PostActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
@@ -136,6 +99,43 @@ public class ReservationActivity extends AppCompatActivity implements SearchView
         drawerLayout.addDrawerListener(toggle);
     }
     @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.searchBar);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Cautarea hotelelor");
+        searchView.setOnQueryTextListener(PostActivity.this);
+        searchView.setIconified(false);
+
+        return true;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
@@ -148,16 +148,19 @@ public class ReservationActivity extends AppCompatActivity implements SearchView
 
         return super.onOptionsItemSelected(item);
     }
-
     @Override
     public boolean onQueryTextSubmit(String query) {
+        // This method can be used when query is submitted eg. creatting search history using SQLite DB
+        //adapter.filter(query);
+
         Toast.makeText(this, "Query Inserted", Toast.LENGTH_SHORT).show();
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        reservationAdapter.filter(newText);
+        adapter.filter(newText);
+
         return true;
     }
 
@@ -165,11 +168,15 @@ public class ReservationActivity extends AppCompatActivity implements SearchView
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.myPosts:
-                Toast.makeText(ReservationActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(PostActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
+                Intent postIntent= new Intent(getApplicationContext(),PostActivity.class);
+
+                startActivity(postIntent);
                 break;
             case R.id.myReservations:
-                Toast.makeText(ReservationActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
-                Intent reservationIntent = new Intent (getApplicationContext(), ReservationActivity.class);
+                Toast.makeText(PostActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
+                Intent reservationIntent = new Intent(getApplicationContext(), ReservationActivity.class);
                 startActivity(reservationIntent);
                 break;
             default:
@@ -177,4 +184,5 @@ public class ReservationActivity extends AppCompatActivity implements SearchView
         }
         return true;
     }
+
 }

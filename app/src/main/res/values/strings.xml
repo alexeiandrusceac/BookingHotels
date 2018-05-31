@@ -12,7 +12,7 @@
     <string name="error_prename">Introduceti prenumele</string>
     <string name="error_password">Introduceti parola</string>
     <string name="error_name_password">Nu exista asa cont. Va rugam sa va inregistra-ti.</string>
-    <string name="conf_password">Confirmati parola</string>
+    <string name="conf_password">Confirmati parola:</string>
     <string name="error_password_match">Nu coincide cu parola de confirmare</string>
     <string name="search_house">Cautare locuinte</string>
     <string name="type">Tipul locuintei:</string>
@@ -20,7 +20,7 @@
     <string name="from_Price">De la suma:</string>
     <string name="to_Price">Pina la suma:</string>
     <string name="success_message">Inregistrarea s-a salvat cu succes</string>
-    <string name="error_email_exists">Deja exista cu asa adresa de email</string>
+    <string name="error_email_exists">Deja exista cont cu asa adresa de email</string>
     <string name="title">Denumire:</string>
     <string name="address">Adresa:</string>
     <string name="price">Pretul:</string>
@@ -38,7 +38,7 @@
     <string name="zip">Cod postal:</string>
     <string name="myPosts">Ofertele mele</string>
     <string name="myReservations">Rezervarile mele</string>
-    <string name="avatar">Incarca avatarul</string>
+
     <string name="navigation_drawer_open">Open </string>
     <string name="navigation_drawer_close">Close </string>
     <string name="separator"> - </string>

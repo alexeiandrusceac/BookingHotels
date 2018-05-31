@@ -6,15 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.bookinghotels.app.mainActivity.UserActions.RegisterActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/register_app_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorAccent"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,6 +23,16 @@
             android:layout_gravity="center"
             android:orientation="vertical"
             tools:context=".mainActivity.UserActions.RegisterActivity">
+            <ImageView
+                android:id="@+id/userImage"
+                android:layout_width="100dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/img"
+                android:src="@drawable/ic_profile"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:layout_weight="1"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/user_name_layout"
@@ -111,21 +114,6 @@
                 android:layout_marginTop="5dp"
                 android:hint="@string/conf_password"
                 android:inputType="textPassword" />
-            <ImageView
-                android:id="@+id/userImage"
-                android:layout_width="wrap_content"
-                android:background="@drawable/img"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <Button
-                android:id="@+id/buttonLoadUserAvatar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@color/colorAccent"
-                android:textColor="@color/searchBar"
-                android:text ="@string/loadImage"
-                android:layout_gravity="center"/>
 
 
             <android.support.v7.widget.AppCompatButton

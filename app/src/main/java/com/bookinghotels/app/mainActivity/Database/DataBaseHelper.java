@@ -262,7 +262,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return listOfHotels;
 
     }
+    public List<Hotels> getHotels(int currUserID) {
+        List<Hotels> listOfHotels = new ArrayList<>();
 
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursorHotels = sqLiteDatabase.rawQuery("SELECT * FROM " + HOTEL_TABLE_NAME +" WHERE "+ HOTEL_ADMIN_ID + " =?",new String[]{String.valueOf(currUserID)});
+        if (cursorHotels.moveToFirst()) {
+            do {
+                Hotels hotels = new Hotels();
+                hotels.Id_hotel = cursorHotels.getInt(cursorHotels.getColumnIndex(HOTEL_ID));
+                hotels.Id_room = cursorHotels.getInt(cursorHotels.getColumnIndex(HOTEL_ROOM_ID));
+                hotels.Id_admin = cursorHotels.getInt(cursorHotels.getColumnIndex(HOTEL_ADMIN_ID));
+                hotels.Title = cursorHotels.getString(cursorHotels.getColumnIndex(HOTEL_TITLE));
+                hotels.Rating = cursorHotels.getFloat(cursorHotels.getColumnIndex(HOTEL_RATING));
+                hotels.Address = cursorHotels.getString(cursorHotels.getColumnIndex(HOTEL_ADDRESS));
+                hotels.Zip = cursorHotels.getString(cursorHotels.getColumnIndex(HOTEL_ZIP));
+                hotels.Image = cursorHotels.getInt(cursorHotels.getColumnIndex(HOTEL_IMAGE));
+                hotels.Phone = cursorHotels.getString(cursorHotels.getColumnIndex(HOTEL_PHONE));
+
+                listOfHotels.add(hotels);
+            }
+            while (cursorHotels.moveToNext());
+        }
+        sqLiteDatabase.close();
+
+        return listOfHotels;
+
+    }
     public void insertHotel(int idRoom, int idAdmin, String title, float rating, String address, int image, String zip, String phone) {
         ContentValues hotelValues = new ContentValues();
         sqLiteDatabase = this.getWritableDatabase();

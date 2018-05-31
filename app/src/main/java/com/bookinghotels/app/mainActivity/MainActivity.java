@@ -86,19 +86,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = layoutInflater.inflate(R.layout.main_bar_activity, frameLayout);
-
+        frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         dbHelper = new DataBaseHelper(MainActivity.this);
         listOfHotels = dbHelper.getHotels();
-        toolbar = view.findViewById(R.id.main_app_toolbar);
-        setSupportActionBar(toolbar);
-        //postView = view.findViewById(R.id.postView);
-        floatingButton =  view.findViewById(R.id.floatingButton);
-        frameLayout = view.findViewById(R.id.content_frame);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
+
+        view = layoutInflater.inflate(R.layout.main_bar_activity, frameLayout);
+
+        toolbar = view.findViewById(R.id.main_app_toolbar);
+        setSupportActionBar(toolbar);
+        //postView = view.findViewById(R.id.postView);
+        floatingButton =  view.findViewById(R.id.floatingButton);
+
+
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,15 +112,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
-
        /* filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFilterDialog(v);
             }
         });*/
-
 
         //userImageView = (ImageView) findViewById(R.id.nav_header_imageView);
 
@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         recHotelsView.setLayoutManager(layoutHotelsManager);
         adapter = new RecyclerHotelsAdapter(MainActivity.this, listOfHotels);
         recHotelsView.setAdapter(adapter);
+
     }
 
 
@@ -320,6 +321,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             case R.id.myPosts:
 
                 Toast.makeText(MainActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
+                Intent postIntent= new Intent(getApplicationContext(),PostActivity.class);
+
+                startActivity(postIntent);
                 break;
             case R.id.myReservations:
                 Toast.makeText(MainActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();

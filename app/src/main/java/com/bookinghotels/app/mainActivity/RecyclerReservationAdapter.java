@@ -21,13 +21,13 @@ import java.util.List;
 
 public class RecyclerReservationAdapter extends RecyclerView.Adapter<RecyclerReservationAdapter.ViewHolder> {
         private List<Reservations> reservationsList;
-        private Context context;
+        static Context context;
         private List<Reservations> dbCopyReservList;
 
     RecyclerReservationAdapter(Context context, List<Reservations> reservationsList)
     {
         this.reservationsList = new ArrayList<Reservations>();
-
+        this.reservationsList = reservationsList;
         this.context = context;
         dbCopyReservList = new ArrayList<Reservations>();
         dbCopyReservList.addAll(reservationsList);
@@ -58,15 +58,15 @@ public class RecyclerReservationAdapter extends RecyclerView.Adapter<RecyclerRes
 }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerReservationAdapter.ViewHolder holder, int position) {
         holder.hotelTitle.setText(reservationsList.get(position).HotelTitle);
         holder.hotelAddress.setText(reservationsList.get(position).HotelAddress);
-        holder.roomNumber.setText(reservationsList.get(position).RoomNumber);
-        holder.roomPrice.setText(reservationsList.get(position).RoomPrice);
+        holder.roomNumber.setText(String.valueOf(reservationsList.get(position).RoomNumber));
+        holder.roomPrice.setText(String.valueOf(reservationsList.get(position).RoomPrice));
         holder.roomType.setText(reservationsList.get(position).RoomType);
         holder.dateIn.setText(reservationsList.get(position).DateIn);
         holder.dateOut.setText(reservationsList.get(position).DateOut);
-        holder.nrPers.setText(reservationsList.get(position).NrPers);
+        holder.nrPers.setText(String.valueOf(reservationsList.get(position).NrPers));
     }
 
     @Override
@@ -83,12 +83,11 @@ public class RecyclerReservationAdapter extends RecyclerView.Adapter<RecyclerRes
         }
         else
         {
-
             for(Reservations name: dbCopyReservList)
             {
                 if(name.HotelTitle.toLowerCase().contains(hotel.toLowerCase()))
                 {
-                    dbCopyReservList.add(name);
+                    reservationsList.add(name);
                 }
             }
 

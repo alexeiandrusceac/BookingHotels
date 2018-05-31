@@ -15,8 +15,12 @@
         android:id="@+id/nav_header_imageView"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:background="@drawable/img" />
-    <TextView
+        android:scaleType="centerCrop"
+        android:background="@drawable/img"
+        android:src="@drawable/ic_profile"
+        android:adjustViewBounds="true"/>
+
+    <Spinner
         android:id="@+id/nav_header_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

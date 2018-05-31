@@ -36,14 +36,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextInputEditText passwordInput;
     private TextInputLayout confPasswordInputLayout;
     private TextInputEditText confPasswd;
-private Toolbar toolbar;
-    private AppBarLayout appBarLayout;
     private AppCompatButton registerButton;
     private ValidationUserInputData valUserData;
     private DataBaseHelper userDBHelper;
     private User userData;
-    private Toolbar registerToolbar;
-    private Button imageLoader;
     private ImageView userImage;
     private int RESULT_LOAD_IMAGE = 1;
     @Override
@@ -51,8 +47,8 @@ private Toolbar toolbar;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
 
-        registerToolbar = (Toolbar)findViewById(R.id.register_app_toolbar);
-        setSupportActionBar(registerToolbar);
+        getSupportActionBar().hide();
+
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
         prenameInputLayout = (TextInputLayout) findViewById(R.id.user_prename_layout);
@@ -60,16 +56,13 @@ private Toolbar toolbar;
         confPasswordInputLayout = (TextInputLayout) findViewById(R.id.user_confpass_layout);
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
 
-        //appBarLayout= (AppBarLayout)findViewById(R.id.register_appBarLayout);
-        ///toolbar = (Toolbar)findViewById(R.id.register_toolbar);
-        //setSupportActionBar(toolbar);
         ///Initializarea listeners
         registerButton.setOnClickListener(this);
         valUserData = new ValidationUserInputData(compatActivity);
         userDBHelper = new DataBaseHelper(compatActivity);
         userImage = (ImageView)findViewById(R.id.userImage);
-        imageLoader  = (Button)findViewById(R.id.buttonLoadUserAvatar);
-        imageLoader.setOnClickListener(new View.OnClickListener() {
+
+        userImage.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("NewApi")
             @Override
             public void onClick(View v) {
@@ -77,7 +70,6 @@ private Toolbar toolbar;
                 startActivityForResult(intent,RESULT_LOAD_IMAGE);
             }
         });
-
     }
 
     @Override

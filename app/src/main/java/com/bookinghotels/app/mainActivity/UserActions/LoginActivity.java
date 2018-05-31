@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.MainActivity;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
@@ -37,9 +38,8 @@ private DataBaseHelper usrHelper;
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-        //getSupportActionBar().hide();
-        loginToolbar = (Toolbar)findViewById(R.id.login_app_toolbar);
-        setSupportActionBar(loginToolbar);
+
+        getSupportActionBar().hide();
         ///Initializarea obiectelor din activity
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
@@ -48,10 +48,6 @@ private DataBaseHelper usrHelper;
         passwordInputEditText = (TextInputEditText) findViewById(R.id.password_Input);
         loginButton = (AppCompatButton) findViewById(R.id.login_button);
         registerLink = (TextView) findViewById(R.id.registerView);
-        //appBarLayout = (AppBarLayout)findViewById(R.id.login_appBarLayout);
-
-
-       // setSupportActionBar(toolbar);
 
         // Initializarea Listeners
         loginButton.setOnClickListener(this);
