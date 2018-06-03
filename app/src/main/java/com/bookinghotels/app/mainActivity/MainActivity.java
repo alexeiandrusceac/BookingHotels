@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+
 import android.net.Uri;
 import android.os.Bundle;
 
+
+import com.bookinghotels.app.mainActivity.Rooms.Rooms;
 
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -29,18 +32,23 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 
 import android.util.Range;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
 
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,10 +57,16 @@ import android.widget.Toast;
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
+import com.bookinghotels.app.mainActivity.Rooms.Rooms;
+import com.bookinghotels.app.mainActivity.UserActions.User.User;
+import com.bookinghotels.app.mainActivity.UserActions.UserSession;
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
@@ -69,8 +83,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private RecyclerView recHotelsView;
     private RecyclerView.LayoutManager layoutHotelsManager;
 
-    //private TextView postView;
-    //private DatePickerDialog datePicker;
     public View postMainView;
     public ImageView imageView;
     private Toolbar toolbar;
@@ -82,33 +94,55 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private NavigationView navigationView;
     private LayoutInflater layoutInflater;
     private static int RESULT_LOAD_IMAGE = 1;
+    UserSession session;
+    private static String userEmail;
+    private static int userImage;
+    private static int idUser;
+    private static TextView user_name_text;
+    private static Button logOut_button;
+    private static TextView user_email_text;
+    private static ImageView nav_header_imageView;
+    private View header;
+    private LinearLayout roomLabelLayout;
+    private Spinner roomType;
+    private TextView roomNumberText;
+    private EditText roomPriceText;
+    private List<Rooms> listOfRooms = new ArrayList<>();
+    private List<Rooms> dbListOfRooms = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frame);
+        Bundle b = getIntent().getExtras();
+        userEmail = b.getString("Email");
+        userImage = b.getInt("Image");
+        idUser = b.getInt("Id");
+        roomType = new Spinner(MainActivity.this);
+        roomType.setAdapter(new ArrayAdapter<TypeRoom>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, TypeRoom.values()
+        ));
+
         layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         dbHelper = new DataBaseHelper(MainActivity.this);
         listOfHotels = dbHelper.getHotels();
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+        header = (navigationView).getHeaderView(0);
+        user_name_text = header.findViewById(R.id.user_name_text);
+        logOut_button = header.findViewById(R.id.logOut_button);
+        user_email_text = header.findViewById(R.id.user_email_text);
+        nav_header_imageView = header.findViewById(R.id.nav_header_imageView);
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
-
-
-
-// Get noticed while dragging
-
 
         view = layoutInflater.inflate(R.layout.main_content_activity, frameLayout);
 
         toolbar = view.findViewById(R.id.main_app_toolbar);
         setSupportActionBar(toolbar);
-        //postView = view.findViewById(R.id.postView);
-        floatingButton =  view.findViewById(R.id.floatingButton);
 
-
+        floatingButton = view.findViewById(R.id.floatingButton);
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,16 +160,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         });*/
 
-        //userImageView = (ImageView) findViewById(R.id.nav_header_imageView);
+        dbListOfRooms = dbHelper.getAllRooms();
+        session = new UserSession(getApplicationContext());
+        session.checkLogin();
+        HashMap<String, String> userDetails = session.getUserDetails();
+        String name = userDetails.get(UserSession.KEY_NAME);
+        user_name_text.setText(name);
+        user_email_text.setText(userEmail);
+        nav_header_imageView.setImageResource(userImage);
 
     }
 
 
-
     private void setupDrawer() {
         toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 
@@ -168,9 +206,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
-
         MenuItem searchItem = menu.findItem(R.id.searchBar);
-
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Cautarea hotelelor");
         searchView.setOnQueryTextListener(MainActivity.this);
@@ -243,9 +279,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         postMainView = layoutInflater.inflate(R.layout.post_main, null, false);
         final Button imageLoader = postMainView.findViewById(R.id.buttonLoadPicturePost);
         final EditText hotelTitle = postMainView.findViewById(R.id.titleInputPost);
-
         final EditText hotelAddress = postMainView.findViewById(R.id.addressInputPost);
-        final EditText hotelPrice = postMainView.findViewById(R.id.priceInputPost);
+        final EditText hotelZip = postMainView.findViewById(R.id.zipInputPost);
+        final EditText hotelPhone = postMainView.findViewById(R.id.phoneInputPost);
+        ///dbHelper.getRooms();
+        final EditText roomNr = postMainView.findViewById(R.id.roomInputPost);
+        roomLabelLayout = postMainView.findViewById(R.id.roomValueLayout);
+
 
         imageLoader.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("NewApi")
@@ -259,13 +299,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 "Posteaza", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                            /*dbHelper.insertBuilding(buildTitle.getText().toString(),
-                                    buildAddress.getText().toString(),
-                                    Integer.parseInt(buildPrice.getText().toString()),
-                                    //buildType.toString(),
-                                    Integer.parseInt(imageView.getDrawable().toString()));
-                                    //buildCheckIn.getText().toString(),
-                                   // buildCheckOut.getText().toString());*/
+                        Hotels hotel = new Hotels();
+                        hotel.Id_admin = idUser;
+                        hotel.Id_room = listOfRooms.lastIndexOf(listOfRooms);
+                        hotel.Address = hotelAddress.getText().toString();
+                       // hotel.Image = imageView.;
+                        hotel.Phone = hotelPhone.getText().toString();
+                        hotel.Zip = hotelZip.getText().toString();
+
+                        dbHelper.insertPost(hotel, listOfRooms);
+
                     }
                 }
         ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
@@ -274,8 +317,74 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             }
         }).show();
+
+
+       /* int roomNumber =  Integer.parseInt(roomNr.getText().toString());
+        for (int i = 0; i < roomNumber; i++) {
+            EditText editText = new EditText(MainActivity.this);
+            editText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            editText.setGravity(Gravity.CENTER);
+            editText.setText("primult editText");
+            if (roomLabelLayout != null) {
+                roomLabelLayout.addView(editText);
+            }
+        }*/
+        /*//buildCheckIn.getText().toString(),
+        // buildCheckOut.getText().toString());*/
+
         listOfHotels = dbHelper.getHotels();
         refreshHotelsData();
+    }
+
+    public void press(View v) {
+        EditText a = v.findViewById(R.id.roomInputPost);
+
+
+        int roomNumber = Integer.parseInt(a.getText().toString());
+        for (int i = 0; i < roomNumber; i++) {
+            Rooms room = new Rooms();
+
+            a.setEnabled(false);
+            TextView roomLabel = new TextView(MainActivity.this);
+            roomNumberText = new TextView(MainActivity.this);
+            TextView priceLabel = new TextView(MainActivity.this);
+            roomPriceText = new EditText(MainActivity.this);
+
+            roomLabel.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ((ViewGroup.MarginLayoutParams) roomLabel.getLayoutParams()).setMargins(14, 14, 0, 0);
+            roomLabel.setText("Camera:");
+            roomLabel.setTextSize(17);
+
+            roomNumberText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ((ViewGroup.MarginLayoutParams) roomNumberText.getLayoutParams()).setMargins(14, 14, 0, 0);
+            roomNumberText.setText(String.valueOf((listOfHotels.size() + 1) + "0" + i));
+            roomNumberText.setTextSize(17);
+
+            priceLabel.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            priceLabel.setGravity(Gravity.CENTER);
+            priceLabel.setText("pretul:");
+            priceLabel.setTextSize(17);
+
+            roomPriceText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ((ViewGroup.MarginLayoutParams) roomPriceText.getLayoutParams()).setMargins(0, 14, 0, 0);
+            roomPriceText.setTextSize(17);
+
+            roomType.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            room.RoomNumber = Integer.parseInt(roomNumberText.getText().toString());
+            room.RoomPrice = Integer.parseInt(roomPriceText.getText().toString());
+            room.RoomType = roomType.getSelectedItem().toString();
+            room.Id_Hotel = listOfHotels.lastIndexOf(listOfHotels) + 1;
+            listOfRooms.add(room);
+
+            if (roomLabelLayout != null) {
+                roomLabelLayout.addView(roomLabel);
+                roomLabelLayout.addView(roomNumberText);
+                roomLabelLayout.addView(priceLabel);
+                roomLabelLayout.addView(roomPriceText);
+                roomLabelLayout.addView(roomType);
+            }
+        }
     }
 
     private void showFilterDialog(View view) {
@@ -326,22 +435,37 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.home:
-                Toast.makeText(MainActivity.this,"Ati ajuns acasa",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Ati ajuns acasa", Toast.LENGTH_SHORT).show();
                 Intent homeActivity = new Intent(getApplicationContext(), MainActivity.class);
+                homeActivity.putExtra("Image", userImage);
+                homeActivity.putExtra("Email", userEmail);
+                homeActivity.putExtra("Id", idUser);
                 startActivity(homeActivity);
+
                 break;
             case R.id.myPosts:
                 Toast.makeText(MainActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
-                Intent postIntent= new Intent(getApplicationContext(),PostActivity.class);
-                getSupportActionBar().setTitle(MainActivity.this.getResources().getString(R.string.post_View));
-                startActivity(postIntent);
+                Intent postActivity = new Intent(getApplicationContext(), PostActivity.class);
+                setTitle(MainActivity.this.getResources().getString(R.string.post_View));
+                postActivity.putExtra("Image", userImage);
+                postActivity.putExtra("Email", userEmail);
+                postActivity.putExtra("Id", idUser);
+                startActivity(postActivity);
+
                 break;
             case R.id.myReservations:
                 Toast.makeText(MainActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
-                Intent reservationIntent = new Intent(getApplicationContext(), ReservationActivity.class);
-                getSupportActionBar().setTitle(MainActivity.this.getResources().getString(R.string.reservationText));
-                startActivity(reservationIntent);
+                Intent reservationActivity = new Intent(getApplicationContext(), ReservationActivity.class);
+                setTitle(MainActivity.this.getResources().getString(R.string.reservationText));
+                reservationActivity.putExtra("Image", userImage);
+                reservationActivity.putExtra("Email", userEmail);
+                reservationActivity.putExtra("Id", idUser);
+                startActivity(reservationActivity);
+                finish();
                 break;
+            case R.id.logOut_button:
+                session.logoutUser();
+                finish();
             default:
                 return false;
         }

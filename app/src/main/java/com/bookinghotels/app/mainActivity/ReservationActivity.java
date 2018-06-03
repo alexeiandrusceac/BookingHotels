@@ -19,17 +19,22 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
 import com.bookinghotels.app.mainActivity.Reservations.Reservations;
+import com.bookinghotels.app.mainActivity.UserActions.UserSession;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class ReservationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ReservationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerReservationAdapter reservationAdapter;
     private RecyclerView recReservView;
@@ -43,27 +48,56 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
     private DataBaseHelper reservHelper;
     private LayoutInflater layoutReservInflater;
     private View viewReservation;
+
+    UserSession userSession;
+    private static String userEmail;
+    private static int userImage;
+    private static int idUser;
+    private static  TextView user_name_text;
+    private static Button logOut_button;
+    private static TextView user_email_text;
+    private static ImageView nav_header_imageView;
+    private View header;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frame);
 
-        layoutReservInflater = (LayoutInflater)ReservationActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        frameReservLayout = (FrameLayout)findViewById(R.id.content_frame);
+        Bundle b = getIntent().getExtras();
+        userEmail = b.getString("Email");
+        userImage = b.getInt("Image");
+        idUser = b.getInt("Id");
+
+        layoutReservInflater = (LayoutInflater) ReservationActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        frameReservLayout = (FrameLayout) findViewById(R.id.content_frame);
         reservHelper = new DataBaseHelper(ReservationActivity.this);
-        listOfReservations = reservHelper.getReservations(1);
-        navigationReservView = (NavigationView)findViewById(R.id.navigationView);
+        listOfReservations = reservHelper.getReservations(idUser);
+        navigationReservView = (NavigationView) findViewById(R.id.navigationView);
         navigationReservView.setNavigationItemSelectedListener(this);
+        header = (navigationReservView).getHeaderView(0);
+        user_name_text = header.findViewById(R.id.user_name_text);
+        logOut_button = header.findViewById(R.id.logOut_button);
+        user_email_text = header.findViewById(R.id.user_email_text);
+        nav_header_imageView = header.findViewById(R.id.nav_header_imageView);
         drawerReservLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
 
-        viewReservation = layoutReservInflater.inflate(R.layout.reservated_content_activity,frameReservLayout);
+        viewReservation = layoutReservInflater.inflate(R.layout.reservated_content_activity, frameReservLayout);
         reservToolbar = viewReservation.findViewById(R.id.reserv_app_toolbar);
         setSupportActionBar(reservToolbar);
 
         refreshReservData();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        userSession = new UserSession(getApplicationContext());
+        userSession.checkLogin();
+        HashMap<String, String> userDetails = userSession.getUserDetails();
+        String name = userDetails.get(UserSession.KEY_NAME);
+
+        user_name_text.setText(name);
+        user_email_text.setText(userEmail);
+        nav_header_imageView.setImageResource(userImage);
     }
 
     public void refreshReservData() {
@@ -76,6 +110,7 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
         recReservView.setAdapter(reservationAdapter);
 
     }
+
     @Override
     public void onBackPressed() {
         if (drawerReservLayout.isDrawerOpen(GravityCompat.START)) {
@@ -84,7 +119,6 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
             super.onBackPressed();
         }
     }
-
 
 
     @Override
@@ -100,7 +134,7 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
     }
 
     private void setupDrawer() {
-        reservToggle = new ActionBarDrawerToggle(ReservationActivity.this, drawerReservLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+        reservToggle = new ActionBarDrawerToggle(ReservationActivity.this, drawerReservLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
@@ -126,21 +160,37 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.home:
-                Toast.makeText(ReservationActivity.this,"Ati ajuns acasa",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReservationActivity.this, "Ati ajuns acasa", Toast.LENGTH_SHORT).show();
                 Intent homeActivity = new Intent(getApplicationContext(), MainActivity.class);
+                homeActivity.putExtra("Image",userImage);
+                homeActivity.putExtra("Email",userEmail);
+                homeActivity.putExtra("Id",idUser);
                 startActivity(homeActivity);
+
                 break;
             case R.id.myPosts:
                 Toast.makeText(ReservationActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
-                Intent postIntent= new Intent(getApplicationContext(),PostActivity.class);
-                getSupportActionBar().setTitle(ReservationActivity.this.getResources().getString(R.string.post_View));
-                startActivity(postIntent);
+                Intent postActivity = new Intent(getApplicationContext(), PostActivity.class);
+                setTitle("adada");
+                postActivity.putExtra("Image",userImage);
+                postActivity.putExtra("Email",userEmail);
+                postActivity.putExtra("Id",idUser);
+                startActivity(postActivity);
+
                 break;
             case R.id.myReservations:
                 Toast.makeText(ReservationActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
-                Intent reservationIntent = new Intent (getApplicationContext(), ReservationActivity.class);
-                getSupportActionBar().setTitle(ReservationActivity.this.getResources().getString(R.string.reservationText));
-                startActivity(reservationIntent);
+                Intent reservationActivity = new Intent(getApplicationContext(), ReservationActivity.class);
+                setTitle(ReservationActivity.this.getResources().getString(R.string.reservationText));
+                reservationActivity.putExtra("Image",userImage);
+                reservationActivity.putExtra("Email",userEmail);
+                reservationActivity.putExtra("Id",idUser);
+                startActivity(reservationActivity);
+
+                break;
+            case R.id.logOut_button:
+                userSession.logoutUser();
+                finish();
                 break;
             default:
                 return false;

@@ -3,9 +3,11 @@ package com.bookinghotels.app.mainActivity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Range;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +31,11 @@ import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAdapter.ViewHolder> {
@@ -54,7 +60,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
     public RecyclerHotelsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         final View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_main, null);
-        //final CardView cardView = itemLayoutView.findViewById(R.id.cardView);
+
         final Button reservationButton = itemLayoutView.findViewById(R.id.reservButton);
 
         reservationButton.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +68,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
             public void onClick(View v) {
                 String hotelTitle = ((TextView) itemLayoutView.findViewById(R.id.titleView)).getText().toString();
 
-                showReservationDialog(hotelTitle, idHotel);
+                showReservationDialog(hotelTitle);
             }
         });
 
@@ -72,13 +78,10 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
     }
 
 
-    private void showReservationDialog(final String hotel, final int hotelId) {
+    private void showReservationDialog(final String hotel) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View reservationView = layoutInflater.inflate(R.layout.reservation_main, null, false);
 
-        final EditText nameInput = (EditText) reservationView.findViewById(R.id.nameEditAutoFill);
-        final EditText prenameInput = (EditText) reservationView.findViewById(R.id.prenameEditAFill);
-        final EditText emailInput = (EditText) reservationView.findViewById(R.id.addressEditAFill);
         final EditText fromDateInput = (EditText) reservationView.findViewById(R.id.dateInInput);
         final EditText toDateInput = (EditText) reservationView.findViewById(R.id.dateOutInput);
         final EditText maxPers = (EditText) reservationView.findViewById(R.id.personEditAFill);
@@ -90,34 +93,40 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
         final String dateFrom = setDate(R.id.dateInInput, reservationView).getText().toString();
         final String dateTo = setDate(R.id.dateOutInput, reservationView).getText().toString();
         final Spinner roomSpinner = reservationView.findViewById(R.id.roomNumberViewSpinner);
+        final TextView roomType = reservationView.findViewById(R.id.roomTypeView);
 
         rangeSeekBar.setNotifyWhileDragging(true);
-        rangeSeekBar.setRangeValues(0, 50000);
+        rangeSeekBar.setRangeValues(0, 1000);
         rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Integer minValue, Integer maxValue) {
                 //Now you have the minValue and maxValue of your RangeSeekbar
-                ArrayList<String> list = new ArrayList<String>();
+                List<String> list  = new ArrayList<String>();
+
                 fromPrice.setText(String.valueOf(minValue));
                 toPrice.setText(String.valueOf(maxValue));
 
-                list = dataBaseHelper.getAvailableRooms(hotelId, minValue, maxValue);
+                list = dataBaseHelper.getRooms(idHotel, minValue, maxValue);
+
                 if (list != null) {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                            android.R.layout.simple_spinner_item, list);
+                  ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+                            android.R.layout.simple_spinner_item,list);
+                    adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     roomSpinner.setAdapter(adapter);
+
+                    //roomType.setText();
                 }
+
             }
         });
-
-
-        new AlertDialog.Builder(context)
+         new AlertDialog.Builder(context)
                 .setTitle(titleReservation)
                 .setView(reservationView)
                 .setPositiveButton("Rezervare", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dataBaseHelper.makeReservation(hotel, "Ion", "Surdu", Integer.parseInt(maxPers.getText().toString()), dateFrom, dateTo);
+                        dataBaseHelper.makeReservation(1, 1, idHotel, Integer.parseInt(maxPers.getText().toString()), dateFrom, dateTo);
+
                     }
                 })
                 .setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
@@ -128,6 +137,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
                 }).show();
 
     }
+
 
     public EditText setDate(int element, View dateView) {
 

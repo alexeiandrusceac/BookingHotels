@@ -7,8 +7,8 @@
     <item
         android:id="@+id/searchBar"
         android:title="@string/action_settings"
-
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"
         />
+
 </menu>

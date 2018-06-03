@@ -53,7 +53,6 @@ public class RecyclerReservationAdapter extends RecyclerView.Adapter<RecyclerRes
             dateOut = (TextView) reservationLayoutView.findViewById(R.id.dateOutView);
             nrPers = (TextView)reservationLayoutView.findViewById(R.id.nrPersView);
 
-
         }
 
 }

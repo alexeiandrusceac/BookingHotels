@@ -1,6 +1,8 @@
 package com.bookinghotels.app.mainActivity.UserActions;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
@@ -33,11 +35,17 @@ private DataBaseHelper userDBHelper;
 private AppBarLayout appBarLayout;
 private Toolbar loginToolbar;
 private DataBaseHelper usrHelper;
+
+    UserSession session;
+
+
 @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+// User Session Manager
+        session = new UserSession(getApplicationContext());
 
         getSupportActionBar().hide();
         ///Initializarea obiectelor din activity
@@ -81,11 +89,16 @@ private DataBaseHelper usrHelper;
 
         if(userDBHelper.checkUserOnLogin(nameInputEditText.getText().toString().trim(),passwordInputEditText.getText().toString().trim()))
         {
+            User currUser = userDBHelper.getUser(nameInputEditText.getText().toString(),passwordInputEditText.getText().toString());
+            session.createUserLoginSession(nameInputEditText.getText().toString(),passwordInputEditText.getText().toString());
+
             Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-            //userDBHelper.getUser(nameInputEditText.getText().toString(),passwordInputEditText.getText().toString());
-            //mainActivityIntent.putExtra("Name",nameInputEditText.getText().toString());
-          //  mainActivityIntent.putExtra("UserImage", );
+            mainActivityIntent.putExtra("Image",currUser.Image);
+            mainActivityIntent.putExtra("Email",currUser.Email);
+            mainActivityIntent.putExtra("Id",currUser.ID_User);
+
             startActivity(mainActivityIntent);
+            finish();
         }
         else
         {

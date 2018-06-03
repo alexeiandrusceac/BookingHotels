@@ -45,4 +45,5 @@
     <string name="period"> Perioada </string>
     <string name="roomType"> Tipul </string>
     <string name="roomNumber"> Nr. camerei </string>
+    <string name="logout_button">Iesire</string>
 </resources>

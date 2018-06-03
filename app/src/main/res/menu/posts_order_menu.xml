@@ -10,5 +10,11 @@
     <item
         android:title="@string/myReservations"
         android:id="@+id/myReservations"/>
+
+    <item
+        android:id="@+id/logOut_button"
+        android:icon="@mipmap/log_out"
+        android:title="@string/logout_button"
+        />
 </group>
 </menu>

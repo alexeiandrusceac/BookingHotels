@@ -19,17 +19,23 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
 import com.bookinghotels.app.mainActivity.Hotels.Hotels;
+import com.bookinghotels.app.mainActivity.UserActions.UserSession;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PostActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
     private DataBaseHelper postHelper;
     private RecyclerView recPostsView;
     private FrameLayout framePostLayout;
@@ -42,17 +48,35 @@ public class PostActivity extends AppCompatActivity implements NavigationView.On
     private View postView;
     private List<Hotels> listOfPosts = new ArrayList<Hotels>();
     private Toolbar postToolbar;
-
+    UserSession userSession;
+    private static String userEmail;
+    private static int userImage;
+    private static int idUser;
+    private static  TextView user_name_text;
+    private static Button logOut_button;
+    private static TextView user_email_text;
+    private static ImageView nav_header_imageView;
+    private View header;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frame);
+        Bundle b = getIntent().getExtras();
+        userEmail = b.getString("Email");
+        userImage = b.getInt("Image");
+        idUser = b.getInt("Id");
         layoutPostsInflater = (LayoutInflater)PostActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         framePostLayout = (FrameLayout)findViewById(R.id.content_frame);
         postHelper = new DataBaseHelper(PostActivity.this);
-        listOfPosts = postHelper.getHotels(1);
+        listOfPosts = postHelper.getHotels(idUser);
         navigationPostView = (NavigationView)findViewById(R.id.navigationView);
         navigationPostView.setNavigationItemSelectedListener(this);
+        header = (navigationPostView).getHeaderView(0);
+        user_name_text = header.findViewById(R.id.user_name_text);
+        logOut_button = header.findViewById(R.id.logOut_button);
+        user_email_text = header.findViewById(R.id.user_email_text);
+        nav_header_imageView = header.findViewById(R.id.nav_header_imageView);
+
         drawerPostLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setupDrawer();
         postView = layoutPostsInflater.inflate(R.layout.post_content_activity,framePostLayout);
@@ -62,6 +86,15 @@ public class PostActivity extends AppCompatActivity implements NavigationView.On
         refreshPostData();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        userSession = new UserSession(getApplicationContext());
+        userSession.checkLogin();
+        HashMap<String,String> userDetails = userSession.getUserDetails();
+        String name = userDetails.get(UserSession.KEY_NAME);
+
+
+        user_name_text.setText(name);
+        user_email_text.setText(userEmail);
+        nav_header_imageView.setImageResource(userImage);
 
     }
     private void refreshPostData()
@@ -136,19 +169,36 @@ public class PostActivity extends AppCompatActivity implements NavigationView.On
             case R.id.home:
                 Toast.makeText(PostActivity.this,"Ati ajuns acasa",Toast.LENGTH_SHORT).show();
                 Intent homeActivity = new Intent(getApplicationContext(), MainActivity.class);
+                homeActivity.putExtra("Image",userImage);
+                homeActivity.putExtra("Email",userEmail);
+                homeActivity.putExtra("Id",idUser);
                 startActivity(homeActivity);
+
                 break;
             case R.id.myPosts:
                 Toast.makeText(PostActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
-                Intent postIntent= new Intent(getApplicationContext(),PostActivity.class);
-                getSupportActionBar().setTitle(PostActivity.this.getResources().getString(R.string.post_View));
-                startActivity(postIntent);
+                Intent postActivity= new Intent(getApplicationContext(),PostActivity.class);
+                setTitle(PostActivity.this.getResources().getString(R.string.post_View));
+                postActivity.putExtra("Image",userImage);
+                postActivity.putExtra("Email",userEmail);
+                postActivity.putExtra("Id",idUser);
+
+                startActivity(postActivity);
+
                 break;
             case R.id.myReservations:
                 Toast.makeText(PostActivity.this, "Ati selectat rezervarile dvs", Toast.LENGTH_SHORT).show();
-                Intent reservationIntent = new Intent(getApplicationContext(), ReservationActivity.class);
-                getSupportActionBar().setTitle(PostActivity.this.getResources().getString(R.string.reservationText));
-                startActivity(reservationIntent);
+                Intent reservationActivity = new Intent(getApplicationContext(), ReservationActivity.class);
+                setTitle(PostActivity.this.getResources().getString(R.string.reservationText));
+                reservationActivity.putExtra("Image",userImage);
+                reservationActivity.putExtra("Email",userEmail);
+                reservationActivity.putExtra("Id",idUser);
+                startActivity(reservationActivity);
+
+                break;
+            case R.id.logOut_button:
+                userSession.logoutUser();
+                finish();
                 break;
             default:
                 return false;

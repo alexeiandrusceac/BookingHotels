@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.transition.CircularPropagation;
 import android.util.Log;
 
 import com.bookinghotels.app.R;
@@ -13,8 +14,11 @@ import com.bookinghotels.app.mainActivity.Reservations.Reservations;
 import com.bookinghotels.app.mainActivity.Rooms.Rooms;
 import com.bookinghotels.app.mainActivity.UserActions.User.User;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -196,27 +200,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.close();
         Log.d(TAG, String.format("Utilizatorul cu numele " + USER_NAME + " " + USER_PRENAME + " s-a inregistrat cu succes"));
     }
-    /*public User getUser(String userName, String password)
-    {
+
+    public User getUser(String userName, String password) {
         User user = new User();
         sqLiteDatabase = this.getReadableDatabase();
-        Cursor curUser = sqLiteDatabase.query(USER_TABLE_NAME , new String[]{USER_ID},USER_NAME + " = ? "+ " AND " + USER_PASSWORD + " = ? ",new String[]{userName,password},null,null, USER_ID);
-        if(curUser.moveToFirst())
-        {do {
+        Cursor curUser = sqLiteDatabase.rawQuery("SELECT * from " + USER_TABLE_NAME + " WHERE " +
+                USER_NAME + " =? " + " AND " + USER_PASSWORD + " = ? ", new String[]{userName, password});
+        if (curUser.moveToFirst()) {
+            do {
 
-            user.Image = curUser.getInt(curUser.getColumnIndex(USER_IMAGE));
-            user.Name = curUser.getString(curUser.getColumnIndex(USER_NAME));
-            user.Prename = curUser.getString(curUser.getColumnIndex(USER_PRENAME));
-            user.Email = curUser.getString(curUser.getColumnIndex(USER_EMAIL));
-            user.Password = curUser.getString(curUser.getColumnIndex(USER_PASSWORD));
+                user.ID_User = curUser.getInt(curUser.getColumnIndex(USER_ID));
 
-        }while(curUser.moveToNext());
+                user.Name = curUser.getString(curUser.getColumnIndex(USER_NAME));
+                user.Prename = curUser.getString(curUser.getColumnIndex(USER_PRENAME));
+                user.Email = curUser.getString(curUser.getColumnIndex(USER_EMAIL));
+                user.Password = curUser.getString(curUser.getColumnIndex(USER_PASSWORD));
+                user.Image = curUser.getInt(curUser.getColumnIndex(USER_IMAGE));
+
+            } while (curUser.moveToNext());
 
         }
 
         sqLiteDatabase.close();
         return user;
-    }*/
+    }
 
     /*******************************************************************************UTILIZATOR************************************************************/
     @Override
@@ -297,23 +304,58 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertHotel(int idRoom, int idAdmin, String title, float rating, String address, int image, String zip, String phone) {
-        ContentValues hotelValues = new ContentValues();
+    public void insertRooms(List<Rooms> listOfRooms) {
+        ContentValues roomValue = new ContentValues();
         sqLiteDatabase = this.getWritableDatabase();
-        hotelValues.put(HOTEL_ROOM_ID, idRoom);
-        hotelValues.put(HOTEL_ADMIN_ID, idAdmin);
-        hotelValues.put(HOTEL_TITLE, title);
-        hotelValues.put(HOTEL_ADDRESS, address);
-        hotelValues.put(HOTEL_RATING, rating);
-        hotelValues.put(HOTEL_ZIP, zip);
-        hotelValues.put(HOTEL_IMAGE, image);
-        hotelValues.put(HOTEL_PHONE, phone);
-
-
-        sqLiteDatabase.insert(HOTEL_TABLE_NAME, null, hotelValues);
+        for (Rooms room : listOfRooms) {
+            roomValue.put(ROOM_HOTEL_ID, room.Id_Hotel);
+            roomValue.put(ROOM_NUMBER, room.RoomNumber);
+            roomValue.put(ROOM_PRICE, room.RoomPrice);
+            roomValue.put(ROOM_TYPE, room.RoomType);
+            sqLiteDatabase.insert(ROOM_TABLE_NAME, null, roomValue);
+        }
         sqLiteDatabase.close();
     }
 
+    public void insertPost(Hotels hotels, List<Rooms> rooms) {
+        ContentValues hotelValues = new ContentValues();
+
+        sqLiteDatabase = this.getWritableDatabase();
+        hotelValues.put(HOTEL_ROOM_ID, hotels.Id_room);
+        hotelValues.put(HOTEL_ADMIN_ID, hotels.Id_admin);
+        hotelValues.put(HOTEL_TITLE, hotels.Title);
+        hotelValues.put(HOTEL_ADDRESS, hotels.Address);
+        hotelValues.put(HOTEL_RATING, hotels.Rating);
+        hotelValues.put(HOTEL_ZIP, hotels.Zip);
+        hotelValues.put(HOTEL_IMAGE, hotels.Image);
+        hotelValues.put(HOTEL_PHONE, hotels.Phone);
+        sqLiteDatabase.insert(HOTEL_TABLE_NAME, null, hotelValues);
+
+        sqLiteDatabase.close();
+
+        this.insertRooms(rooms);
+
+    }
+
+    public List<Rooms> getAllRooms() {
+        List<Rooms> listOfRooms = new ArrayList<>();
+        sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursorRoom = sqLiteDatabase.rawQuery("Select * from " + ROOM_TABLE_NAME, null);
+        if (cursorRoom.moveToFirst()) {
+            do {
+                Rooms room = new Rooms();
+                room.Id_Hotel = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_HOTEL_ID));
+                room.Id_Room = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_ID));
+                room.RoomNumber = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_NUMBER));
+                room.RoomType = cursorRoom.getString(cursorRoom.getColumnIndex(ROOM_TYPE));
+                room.RoomPrice = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_PRICE));
+                listOfRooms.add(room);
+            }
+            while (cursorRoom.moveToNext());
+        }
+        sqLiteDatabase.close();
+        return listOfRooms;
+    }
     /*public List<Hotels> getHotelsByName(String hName)
     {
         List<Hotels> listOfHotelsByName = new ArrayList<>();
@@ -370,7 +412,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /*************************************************************************HOTELS ACTIONS*********************************************************/
 
 
-    public void makeReservation(String guestID, String roomID, String hotelID, int nrPers, String fromDate, String toDate) {
+    public void makeReservation(int guestID, int roomID, int hotelID, int nrPers, String fromDate, String toDate) {
         ContentValues reservValues = new ContentValues();
 
         reservValues.put(RESERV_GUEST_ID, guestID);
@@ -409,20 +451,41 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return reservationsList;
     }
 
-    public ArrayList<String> getAvailableRooms(int hotelID, int fromPrice, int toPrice) {
+    public List<String> getRooms(int hotelID, int fromPrice, int toPrice) {
+        List<String> listOfRooms = new ArrayList<String>();
+
         sqLiteDatabase = this.getReadableDatabase();
         Cursor cursorRoom = sqLiteDatabase.rawQuery(GET_AVAILABLEROOM, new String[]{String.valueOf(hotelID), String.valueOf(fromPrice), String.valueOf(toPrice)});
-        ArrayList<String> listOfdata = new ArrayList<String>();
         if (cursorRoom.moveToFirst()) {
-        do {
-                String data = cursorRoom.getString(cursorRoom.getColumnIndex(ROOM_NUMBER));
-                listOfdata.add(data);
+            do {
+                String room = cursorRoom.getString(cursorRoom.getColumnIndex(ROOM_NUMBER));
+                listOfRooms.add(room);
+            } while (cursorRoom.moveToNext());
+        }
+        return listOfRooms;
+    }
+    /*public HashMap<String,String> getAvailableRooms(int hotelID, int fromPrice, int toPrice) {
+        Rooms room = new Rooms();
+        sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursorRoom = sqLiteDatabase.rawQuery(GET_AVAILABLEROOM, new String[]{String.valueOf(hotelID), String.valueOf(fromPrice), String.valueOf(toPrice)});
+        //List<Rooms> listOfdata = new ArrayList<>();
+        HashMap<String,String> mapOfData = new HashMap<String, String>();
+        if (cursorRoom.moveToFirst()) {
+
+            do {
+               room.Id_Room = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_ID));
+                room.Id_Hotel = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_HOTEL_ID));
+                room.RoomNumber = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_NUMBER));
+                room.RoomType = cursorRoom.getString(cursorRoom.getColumnIndex(ROOM_TYPE));
+                room.RoomPrice = cursorRoom.getInt(cursorRoom.getColumnIndex(ROOM_PRICE));
+                listOfdata.add(room);
 
             }
             while (cursorRoom.moveToNext());
+
         }
 
         sqLiteDatabase.close();
         return listOfdata;
-    }
+    }*/
 }
