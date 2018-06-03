@@ -306,7 +306,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                        // hotel.Image = imageView.;
                         hotel.Phone = hotelPhone.getText().toString();
                         hotel.Zip = hotelZip.getText().toString();
-
+/*for(int i=0;i<Integer.parseInt(roomNumberText.getText().toString());i++) {
+   Rooms room = new Rooms();
+    room.RoomNumber = Integer.parseInt(roomNumberText.getText().toString());
+    room.RoomPrice = Integer.parseInt(roomPriceText.getText().toString());
+    room.RoomType = roomType.getSelectedItem().toString();
+    room.Id_Hotel = listOfHotels.lastIndexOf(listOfHotels) + 1;
+    listOfRooms.add(room);
+}*/
                         dbHelper.insertPost(hotel, listOfRooms);
 
                     }
@@ -371,11 +378,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             roomType.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            room.RoomNumber = Integer.parseInt(roomNumberText.getText().toString());
-            room.RoomPrice = Integer.parseInt(roomPriceText.getText().toString());
-            room.RoomType = roomType.getSelectedItem().toString();
-            room.Id_Hotel = listOfHotels.lastIndexOf(listOfHotels) + 1;
-            listOfRooms.add(room);
+
 
             if (roomLabelLayout != null) {
                 roomLabelLayout.addView(roomLabel);
@@ -384,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 roomLabelLayout.addView(roomPriceText);
                 roomLabelLayout.addView(roomType);
             }
+
         }
     }
 

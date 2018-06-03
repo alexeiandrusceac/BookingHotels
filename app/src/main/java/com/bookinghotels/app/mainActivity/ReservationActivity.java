@@ -154,7 +154,19 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
         reservToggle.setDrawerIndicatorEnabled(true);
         drawerReservLayout.addDrawerListener(reservToggle);
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
+        int id = item.getItemId();
+
+        if (id == R.id.searchBar) {
+            return true;
+        } else if (reservToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
