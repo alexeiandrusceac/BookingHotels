@@ -9,6 +9,6 @@ public class Hotels {
     public String Zip;
     public float Rating;
     public String Phone;
-    public int Image;
+    public byte[] Image;
     public Hotels(){}
 }

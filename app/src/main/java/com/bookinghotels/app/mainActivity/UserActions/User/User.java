@@ -6,7 +6,7 @@ public class User {
     public String Prename;
     public String Password;
     public String Email;
-    public int Image;
+    public byte[] Image;
 
     public User(){}
 }

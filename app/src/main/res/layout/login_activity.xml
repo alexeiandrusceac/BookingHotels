@@ -74,7 +74,6 @@
                 android:layout_marginTop="40dp"
                 android:background="@color/colorAccent"
                 android:gravity="center"
-
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/login_button"

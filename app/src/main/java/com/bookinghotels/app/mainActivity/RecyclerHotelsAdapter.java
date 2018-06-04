@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -165,12 +167,12 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
 
     @Override
     public void onBindViewHolder(RecyclerHotelsAdapter.ViewHolder holder, int position) {
-
+        byte[] byteArray = dbList.get(position).Image;
         holder.title.setText(dbList.get(position).Title);
         holder.addres.setText(dbList.get(position).Address);
         holder.zip.setText(dbList.get(position).Zip);
         holder.rating.setText(String.valueOf(dbList.get(position).Rating));
-        holder.image.setImageResource(dbList.get(position).Image);
+        holder.image.setImageBitmap(BitmapFactory.decodeByteArray(byteArray,0,byteArray.length));
         holder.phone.setText(dbList.get(position).Phone);
         idHotel = dbList.get(position).Id_hotel;
     }

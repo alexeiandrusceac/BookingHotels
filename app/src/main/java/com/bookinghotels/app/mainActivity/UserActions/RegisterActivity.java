@@ -3,7 +3,9 @@ package com.bookinghotels.app.mainActivity.UserActions;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,25 +22,28 @@ import com.bookinghotels.app.R;
 import com.bookinghotels.app.mainActivity.Database.DataBaseHelper;
 import com.bookinghotels.app.mainActivity.UserActions.User.User;
 
+import java.io.ByteArrayOutputStream;
+
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private final AppCompatActivity compatActivity = RegisterActivity.this;
     private NestedScrollView scrollView;
+    private TextInputEditText nameInputValue;
     private TextInputLayout nameInputLayout;
-    private TextInputEditText nameInput;
+    private TextInputEditText prenameInputValue;
     private TextInputLayout prenameInputLayout;
-    private TextInputEditText prenameInput;
+    private TextInputEditText emailInputValue;
     private TextInputLayout emailInputLayout;
-    private TextInputEditText emailInput;
+    private TextInputEditText passwordInputValue;
     private TextInputLayout passwordInputLayout;
-    private TextInputEditText passwordInput;
+    private TextInputEditText confPasswdInputValue;
     private TextInputLayout confPasswordInputLayout;
-    private TextInputEditText confPasswd;
     private AppCompatButton registerButton;
     private ValidationUserInputData valUserData;
     private DataBaseHelper userDBHelper;
     private User userData;
     private ImageView userImage;
     private int RESULT_LOAD_IMAGE = 1;
+    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,10 +53,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         getSupportActionBar().hide();
 
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
-        nameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
-        prenameInputLayout = (TextInputLayout) findViewById(R.id.user_prename_layout);
-        passwordInputLayout = (TextInputLayout) findViewById(R.id.password_layout);
-        confPasswordInputLayout = (TextInputLayout) findViewById(R.id.user_confpass_layout);
+        nameInputValue = (TextInputEditText) findViewById(R.id.user_name_text);
+        nameInputLayout = (TextInputLayout)findViewById(R.id.user_name_layout);
+        prenameInputValue = (TextInputEditText) findViewById(R.id.user_prename_text);
+        prenameInputLayout= (TextInputLayout)findViewById(R.id.user_prename_layout);
+        emailInputValue= (TextInputEditText)findViewById(R.id.user_email_text);
+        emailInputLayout = (TextInputLayout)findViewById(R.id.user_email_layout);
+        passwordInputValue= (TextInputEditText) findViewById(R.id.user_pass_text);
+        passwordInputLayout = (TextInputLayout)findViewById(R.id.user_pass_layout);
+        confPasswdInputValue = (TextInputEditText) findViewById(R.id.user_confpass_text);
+        confPasswordInputLayout = (TextInputLayout)findViewById(R.id.user_confpass_layout);
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
 
         ///Initializarea listeners
@@ -59,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         valUserData = new ValidationUserInputData(compatActivity);
         userDBHelper = new DataBaseHelper(compatActivity);
         userImage = (ImageView)findViewById(R.id.userImage);
-
+        userData = new User();
         userImage.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("NewApi")
             @Override
@@ -80,36 +91,44 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void registerUser() {
-        if (!valUserData.textFilled(nameInput, nameInputLayout, getString(R.string.error_name))) {
+
+
+        if (!valUserData.textFilled(nameInputValue, nameInputLayout, getString(R.string.error_name))) {
             return;
         }
-        if (!valUserData.textFilled(emailInput, emailInputLayout, getString(R.string.error_email))) {
+        /*if (!valUserData.textFilled(emailInputValue, emailInputLayout, getString(R.string.error_email))) {
             return;
         }
-        if (!valUserData.nameValidating(nameInput, nameInputLayout, getString(R.string.error_email))) {
+        if (!valUserData.nameValidating(emailInputValue, nameInputLayout, getString(R.string.error_email))) {
+            return;
+        }*/
+        if (!valUserData.textFilled(passwordInputValue, passwordInputLayout, getString(R.string.error_password))) {
             return;
         }
-        if (!valUserData.textFilled(passwordInput, passwordInputLayout, getString(R.string.error_password))) {
-            return;
-        }
-        if (!valUserData.isInputEditTextMatches(passwordInput, confPasswd,
+        if (!valUserData.isInputEditTextMatches(passwordInputValue, confPasswdInputValue,
                 confPasswordInputLayout, getString(R.string.error_password_match))) {
             return;
         }
 
-        if (!userDBHelper.checkUserOnLogin(emailInput.getText().toString().trim())) {
+        if (!userDBHelper.checkUserOnLogin(nameInputValue.getText().toString().trim())) {
 
-            userData.Name = nameInput.getText().toString().trim();
-            userData.Email = emailInput.getText().toString().trim();
-            userData.Password = passwordInput.getText().toString().trim();
-            userData.Image = Integer.parseInt(userImage.toString().trim());
+            userData.Name = nameInputValue.getText().toString();
+            userData.Prename = prenameInputValue.getText().toString();
+
+            userData.Email = emailInputValue.getText().toString();
+
+            userData.Password = passwordInputValue.getText().toString();
+            Bitmap bitmap = ((BitmapDrawable) userImage.getDrawable()).getBitmap();
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            userData.Image = baos.toByteArray();
 
             userDBHelper.registerNewUser(userData);
 
             // Snack Bar to show success message that record saved successfully
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-            emailInput.setText(null);
-            nameInput.setText(null);
+            emailInputValue.setText(null);
+            nameInputValue.setText(null);
 
             Intent loginActivity =  new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(loginActivity);
@@ -135,6 +154,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             cursor.close();
 
             userImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
         }
 
     }
