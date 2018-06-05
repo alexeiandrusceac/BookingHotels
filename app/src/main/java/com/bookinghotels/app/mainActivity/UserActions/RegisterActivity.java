@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         confPasswordInputLayout = (TextInputLayout)findViewById(R.id.user_confpass_layout);
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
 
-        ///Initializarea listeners
+
         registerButton.setOnClickListener(this);
         valUserData = new ValidationUserInputData(compatActivity);
         userDBHelper = new DataBaseHelper(compatActivity);

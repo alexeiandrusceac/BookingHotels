@@ -116,7 +116,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
                     adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     roomSpinner.setAdapter(adapter);
 
-                    //roomType.setText();
+
                 }
 
             }

@@ -144,18 +144,21 @@
             android:fontFamily="sans-serif"
             android:inputType="number" />
     </LinearLayout>
-
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:id="@+id/scrollViewLayout"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/roomValueLayout"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:orientation="vertical"
 
-    </LinearLayout>
-
+        android:layout_height="wrap_content"/>
+    </ScrollView>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
+        android:layout_below="@id/scrollViewLayout"
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
