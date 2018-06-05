@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         NavigationView.OnNavigationItemSelectedListener {
 
     private static DataBaseHelper dbHelper;
-    private static List<Hotels> listOfHotels = new ArrayList<>();
+    private static List<Hotels> listOfHotels;
     private FloatingActionButton floatingButton;
     private RecyclerHotelsAdapter adapter;
     private RecyclerView recHotelsView;
@@ -118,11 +118,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private LinearLayout linearLayout;
     private List<Rooms> listOfRooms = new ArrayList<>();
     private List<Rooms> dbListOfRooms = new ArrayList<>();
+    private String name;
+    private HashMap<String, String> userDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frame);
+        listOfHotels = new ArrayList<>();
+        /// Obtinerea datelor din Intent
         Bundle b = getIntent().getExtras();
         userEmail = b.getString("Email");
         userImage = b.getByteArray("Image");
@@ -132,8 +136,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         //https://github.com/thetonrifles/stackoverflow/tree/so-34848401
         layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        dbHelper = new DataBaseHelper(MainActivity.this);
-        listOfHotels = dbHelper.getHotels();
+        dbHelper =  DataBaseHelper.getInstance(this);
+
+        listOfHotels = dbHelper.getAllHotels();
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
         header = (navigationView).getHeaderView(0);
@@ -171,11 +176,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         dbListOfRooms = dbHelper.getAllRooms();
         session = new UserSession(getApplicationContext());
         session.checkLogin();
-        HashMap<String, String> userDetails = session.getUserDetails();
-        String name = userDetails.get(UserSession.KEY_NAME);
+        userDetails = session.getUserDetails();
+        name = userDetails.get(UserSession.KEY_NAME);
         user_name_text.setText(name);
         user_email_text.setText(userEmail);
-
         nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
     }
 
@@ -275,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            imageView = (ImageView) postMainView.findViewById(R.id.imageViewPost);
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
 
@@ -285,17 +288,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         LayoutInflater layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         postMainView = layoutInflater.inflate(R.layout.post_main, null, false);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final Button imageLoader = postMainView.findViewById(R.id.buttonLoadPicturePost);
+        //final Button imageLoader = postMainView.findViewById(R.id.buttonLoadPicturePost);
         final EditText hotelTitle = postMainView.findViewById(R.id.titleInputPost);
         final EditText hotelAddress = postMainView.findViewById(R.id.addressInputPost);
         final EditText hotelZip = postMainView.findViewById(R.id.zipInputPost);
         final EditText hotelPhone = postMainView.findViewById(R.id.phoneInputPost);
-        ///dbHelper.getRooms();
-        final EditText roomNr = postMainView.findViewById(R.id.roomInputPost);
+        imageView  = (ImageView) postMainView.findViewById(R.id.imageViewPost);
         roomLabelLayout = postMainView.findViewById(R.id.roomValueLayout);
 
-
-        imageLoader.setOnClickListener(new View.OnClickListener() {
+        imageView.setClickable(true);
+        imageView.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("NewApi")
             @Override
             public void onClick(View v) {
@@ -309,27 +311,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Hotels hotel = new Hotels();
-
-                        String[] strings = new String[4];
-                        //Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
-                        // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        hotel.Id_admin = idUser;
-                        int nr = listOfRooms.lastIndexOf(listOfRooms) + 1;
-                        hotel.Id_room = nr;
+                        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                       // hotel.Id_Hotel  = listOfHotels.lastIndexOf(listOfHotels)+1;
+                        hotel.Id_AdminHotel = idUser;
+                        hotel.Id_RoomHotel = 1;//listOfRooms.lastIndexOf(listOfRooms) + 1;
                         hotel.Title = hotelTitle.getText().toString();
                         hotel.Address = hotelAddress.getText().toString();
-                        //hotel.Image = baos.toByteArray();
+                        hotel.Image = baos.toByteArray();
                         hotel.Phone = hotelPhone.getText().toString();
                         hotel.Zip = hotelZip.getText().toString();
 
-                        for(int j=0;j<roomLabelLayout.getChildCount();j++) {
+                        for (int j = 0; j < roomLabelLayout.getChildCount(); j++) {
                             Rooms room = new Rooms();
-                            LinearLayout ll = (LinearLayout) roomLabelLayout.getChildAt(j);
-                            for (int i = 0; i < ll.getChildCount(); i++) {
+                            LinearLayout linearLayout = (LinearLayout) roomLabelLayout.getChildAt(j);
+                            for (int i = 0; i < linearLayout.getChildCount(); i++) {
 
-                                View v = ll.getChildAt(i);
-                                int idElement = v.getId();
+                                View v = linearLayout.getChildAt(i);
                                 if (v.getId() > -1) {
                                     if (v.getClass().equals(TextView.class)) {
                                         room.RoomNumber = Integer.parseInt(((TextView) v).getText().toString());
@@ -340,19 +338,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     } else if (v.getClass().equals(Spinner.class)) {
                                         room.RoomType = ((Spinner) v).getSelectedItem().toString();
                                         room.Id_Hotel = Integer.parseInt(String.valueOf(listOfHotels.lastIndexOf(listOfHotels) + 1));
-
                                         listOfRooms.add(room);
-
                                     }
 
                                 }
-
-
                             }
-
                         }
-                        dbHelper.insertPost(hotel, listOfRooms);
-
+                        dbHelper.insertPost(hotel);
+                        dbHelper.insertRooms(listOfRooms);
+                        listOfHotels.add(hotel);
+                        refreshHotelsData();
+                       // listOfHotels = dbHelper.getAllHotels();
                     }
                 }
         ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
@@ -362,17 +358,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         }).show();
 
-        listOfHotels = dbHelper.getHotels();
-        refreshHotelsData();
+
+
+
     }
 
-    public void press(View v) {
+    public void onAddNumber(View v) {
         EditText a = v.findViewById(R.id.roomInputPost);
         int roomNumber = Integer.parseInt(a.getText().toString());
 
         for (int i = 0; i < roomNumber; i++) {
             a.setEnabled(false);
-             linearLayout = new LinearLayout(this);
+            linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
             TextView roomLabel = new TextView(MainActivity.this);
@@ -453,16 +450,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextSubmit(String query) {
         // This method can be used when query is submitted eg. creatting search history using SQLite DB
-        //adapter.filter(query);
-
-        Toast.makeText(this, "Query Inserted", Toast.LENGTH_SHORT).show();
-        return true;
+        return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         adapter.filter(newText);
-
         return true;
     }
 

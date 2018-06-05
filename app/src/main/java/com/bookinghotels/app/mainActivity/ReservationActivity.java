@@ -72,7 +72,7 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
 
         layoutReservInflater = (LayoutInflater) ReservationActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameReservLayout = (FrameLayout) findViewById(R.id.content_frame);
-        reservHelper = new DataBaseHelper(ReservationActivity.this);
+        reservHelper =  DataBaseHelper.getInstance(this);
         listOfReservations = reservHelper.getReservations(idUser);
         navigationReservView = (NavigationView) findViewById(R.id.navigationView);
         navigationReservView.setNavigationItemSelectedListener(this);

@@ -61,7 +61,7 @@ private DataBaseHelper usrHelper;
         loginButton.setOnClickListener(this);
         registerLink.setOnClickListener(this);
 
-        userDBHelper = new DataBaseHelper(compatActivity);
+        userDBHelper = DataBaseHelper.getInstance(this);
         valUserInput = new ValidationUserInputData(compatActivity);
 
     }

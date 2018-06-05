@@ -54,29 +54,29 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameInputValue = (TextInputEditText) findViewById(R.id.user_name_text);
-        nameInputLayout = (TextInputLayout)findViewById(R.id.user_name_layout);
+        nameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
         prenameInputValue = (TextInputEditText) findViewById(R.id.user_prename_text);
-        prenameInputLayout= (TextInputLayout)findViewById(R.id.user_prename_layout);
-        emailInputValue= (TextInputEditText)findViewById(R.id.user_email_text);
-        emailInputLayout = (TextInputLayout)findViewById(R.id.user_email_layout);
-        passwordInputValue= (TextInputEditText) findViewById(R.id.user_pass_text);
-        passwordInputLayout = (TextInputLayout)findViewById(R.id.user_pass_layout);
+        prenameInputLayout = (TextInputLayout) findViewById(R.id.user_prename_layout);
+        emailInputValue = (TextInputEditText) findViewById(R.id.user_email_text);
+        emailInputLayout = (TextInputLayout) findViewById(R.id.user_email_layout);
+        passwordInputValue = (TextInputEditText) findViewById(R.id.user_pass_text);
+        passwordInputLayout = (TextInputLayout) findViewById(R.id.user_pass_layout);
         confPasswdInputValue = (TextInputEditText) findViewById(R.id.user_confpass_text);
-        confPasswordInputLayout = (TextInputLayout)findViewById(R.id.user_confpass_layout);
+        confPasswordInputLayout = (TextInputLayout) findViewById(R.id.user_confpass_layout);
         registerButton = (AppCompatButton) findViewById(R.id.register_button);
 
 
         registerButton.setOnClickListener(this);
         valUserData = new ValidationUserInputData(compatActivity);
-        userDBHelper = new DataBaseHelper(compatActivity);
-        userImage = (ImageView)findViewById(R.id.userImage);
+        userDBHelper = DataBaseHelper.getInstance(this);
+        userImage = (ImageView) findViewById(R.id.userImage);
         userData = new User();
         userImage.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("NewApi")
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,RESULT_LOAD_IMAGE);
+                startActivityForResult(intent, RESULT_LOAD_IMAGE);
             }
         });
     }
@@ -91,17 +91,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void registerUser() {
-
-
         if (!valUserData.textFilled(nameInputValue, nameInputLayout, getString(R.string.error_name))) {
             return;
         }
-        /*if (!valUserData.textFilled(emailInputValue, emailInputLayout, getString(R.string.error_email))) {
-            return;
-        }
-        if (!valUserData.nameValidating(emailInputValue, nameInputLayout, getString(R.string.error_email))) {
-            return;
-        }*/
         if (!valUserData.textFilled(passwordInputValue, passwordInputLayout, getString(R.string.error_password))) {
             return;
         }
@@ -114,36 +106,32 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             userData.Name = nameInputValue.getText().toString();
             userData.Prename = prenameInputValue.getText().toString();
-
             userData.Email = emailInputValue.getText().toString();
-
             userData.Password = passwordInputValue.getText().toString();
             Bitmap bitmap = ((BitmapDrawable) userImage.getDrawable()).getBitmap();
-
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             userData.Image = baos.toByteArray();
-
             userDBHelper.registerNewUser(userData);
 
-            // Snack Bar to show success message that record saved successfully
             Snackbar.make(scrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             emailInputValue.setText(null);
             nameInputValue.setText(null);
 
-            Intent loginActivity =  new Intent(getApplicationContext(), LoginActivity.class);
+            Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(loginActivity);
         } else {
             // Snack Bar to show error message that record already exists
             Snackbar.make(scrollView, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);

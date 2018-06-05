@@ -55,7 +55,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
         this.dbList = dbList;
         copyDbList = new ArrayList<Hotels>();
         copyDbList.addAll(dbList);
-        dataBaseHelper = new DataBaseHelper(context);
+        dataBaseHelper = DataBaseHelper.getInstance(context);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class RecyclerHotelsAdapter extends RecyclerView.Adapter<RecyclerHotelsAd
         holder.rating.setText(String.valueOf(dbList.get(position).Rating));
         holder.image.setImageBitmap(BitmapFactory.decodeByteArray(byteArray,0,byteArray.length));
         holder.phone.setText(dbList.get(position).Phone);
-        idHotel = dbList.get(position).Id_hotel;
+        idHotel = dbList.get(position).Id_Hotel;
     }
 
     @Override

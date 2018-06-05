@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library-0.1.0">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rangeseekbar-library-0.1.0.aar/14b7e233d295d66e6bd500c17c676c2c/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rangeseekbar-library-0.1.0.aar/14b7e233d295d66e6bd500c17c676c2c/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rangeseekbar-library-0.1.0.aar/77fb9fef711b968b26b095727c24f2fd/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rangeseekbar-library-0.1.0.aar/77fb9fef711b968b26b095727c24f2fd/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

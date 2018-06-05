@@ -1,9 +1,9 @@
 package com.bookinghotels.app.mainActivity.Hotels;
 
 public class Hotels {
-    public int Id_hotel;
-    public int Id_room;
-    public int Id_admin;
+    public int Id_Hotel;
+    public int Id_RoomHotel;
+    public int Id_AdminHotel;
     public String Title;
     public String Address;
     public String Zip;
