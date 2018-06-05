@@ -84,7 +84,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             "SELECT * FROM " + RESERV_TABLE_NAME +
                     " INNER JOIN " + HOTEL_TABLE_NAME + " ON " + RESERV_HOTEL_ID + " = " + HOTEL_ID +
                     " INNER JOIN " + ROOM_TABLE_NAME + " ON " + RESERV_ROOM_ID + " = " + ROOM_ID +
-                    " INNER JOIN " + USER_TABLE_NAME + " ON " + RESERV_GUEST_ID + " = " + USER_ID + " WHERE " + RESERV_GUEST_ID + " =?";
+                    " INNER JOIN " + USER_TABLE_NAME + " ON " + RESERV_GUEST_ID + " = " + USER_ID + " WHERE " + RESERV_GUEST_ID + " =? "+" ORDER BY "+ HOTEL_TITLE+ " ASC ";
     // Operation to Reservation tabel
 
     private final String GET_AVAILABLEROOM =

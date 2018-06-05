@@ -3,6 +3,7 @@ package com.bookinghotels.app.mainActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,7 +51,7 @@ public class PostActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar postToolbar;
     UserSession userSession;
     private static String userEmail;
-    private static int userImage;
+    private static byte[] userImage;
     private static int idUser;
     private static  TextView user_name_text;
     private static Button logOut_button;
@@ -63,7 +64,7 @@ public class PostActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.main_frame);
         Bundle b = getIntent().getExtras();
         userEmail = b.getString("Email");
-        userImage = b.getInt("Image");
+        userImage = b.getByteArray("Image");
         idUser = b.getInt("Id");
         layoutPostsInflater = (LayoutInflater)PostActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         framePostLayout = (FrameLayout)findViewById(R.id.content_frame);
@@ -94,7 +95,7 @@ public class PostActivity extends AppCompatActivity implements NavigationView.On
 
         user_name_text.setText(name);
         user_email_text.setText(userEmail);
-        nav_header_imageView.setImageResource(userImage);
+        nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
 
     }
     private void refreshPostData()

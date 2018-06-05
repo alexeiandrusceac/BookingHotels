@@ -3,6 +3,7 @@ package com.bookinghotels.app.mainActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,7 +52,7 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
 
     UserSession userSession;
     private static String userEmail;
-    private static int userImage;
+    private static byte[] userImage;
     private static int idUser;
     private static  TextView user_name_text;
     private static Button logOut_button;
@@ -66,7 +67,7 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
 
         Bundle b = getIntent().getExtras();
         userEmail = b.getString("Email");
-        userImage = b.getInt("Image");
+        userImage = b.getByteArray("Image");
         idUser = b.getInt("Id");
 
         layoutReservInflater = (LayoutInflater) ReservationActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -97,7 +98,7 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
 
         user_name_text.setText(name);
         user_email_text.setText(userEmail);
-        nav_header_imageView.setImageResource(userImage);
+        nav_header_imageView.setImageBitmap(BitmapFactory.decodeByteArray(userImage, 0, userImage.length));
     }
 
     public void refreshReservData() {
@@ -183,7 +184,7 @@ public class ReservationActivity extends AppCompatActivity implements Navigation
             case R.id.myPosts:
                 Toast.makeText(ReservationActivity.this, "Ati selectat ofertele dvs", Toast.LENGTH_SHORT).show();
                 Intent postActivity = new Intent(getApplicationContext(), PostActivity.class);
-                setTitle("adada");
+
                 postActivity.putExtra("Image",userImage);
                 postActivity.putExtra("Email",userEmail);
                 postActivity.putExtra("Id",idUser);

@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         userImage = b.getByteArray("Image");
         idUser = b.getInt("Id");
 
-
+//https://github.com/thetonrifles/stackoverflow/blob/so-34848401/app/src/main/java/com/thetonrifles/stackoverflow/adapter/EventsAdapter.java
         layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         dbHelper = new DataBaseHelper(MainActivity.this);
@@ -421,7 +421,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
-    private void showFilterDialog(View view) {
+    /*private void showFilterDialog(View view) {
 
         LayoutInflater layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View viewFilterDialog = layoutInflater.inflate(R.layout.main_filter, null, false);
@@ -447,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             }
         }).show();
-    }
+    }*/
 
     @Override
     public boolean onQueryTextSubmit(String query) {

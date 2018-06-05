@@ -26,6 +26,7 @@ public class RecyclerReservationAdapter extends RecyclerView.Adapter<RecyclerRes
 
     RecyclerReservationAdapter(Context context, List<Reservations> reservationsList)
     {
+
         this.reservationsList = new ArrayList<Reservations>();
         this.reservationsList = reservationsList;
         this.context = context;
