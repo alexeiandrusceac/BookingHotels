@@ -5,6 +5,7 @@ public class Hotels {
     public int Id_RoomHotel;
     public int Id_AdminHotel;
     public String Title;
+    public String City;
     public String Address;
     public String Zip;
     public float Rating;

@@ -8,10 +8,6 @@
     card_view:cardCornerRadius="5dp"
     card_view:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/hotelTitleView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:id="@+id/relativeReservLayout"
@@ -20,23 +16,45 @@
         android:padding="15dp">
 
         <LinearLayout
+            android:id="@+id/hotelTitleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/hotelTitleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="sfsadsfs"
+                android:textColor="@color/colorPrimary"
+                android:textSize="25dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/hotelAddressLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/hotelTitleLayout"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/hotelAddressLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/address" />
+                android:text="@string/address"
+                android:textColor="#000000"
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/hotelAddressView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/hotelAddressLabel"
-                android:textColor="#000000" />
+                android:gravity="right"
+
+                android:textSize="20dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -50,32 +68,38 @@
                 android:id="@+id/datePeriodLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/period" />
+                android:text="@string/period"
+                android:textColor="#000000"
+
+                android:textSize="20dp" />
 
 
-                <TextView
-                    android:id="@+id/dateInView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignRight="@id/datePeriodLabel"
+            <TextView
+                android:id="@+id/dateInView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
 
-                    android:textColor="#000000" />
+                android:gravity="right"
+                android:textSize="20dp" />
 
-                <TextView
-                    android:id="@+id/separatorView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/separatorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/separator"
+                android:textSize="20dp" />
 
-                    android:layout_alignRight="@id/dateInView"
-                    android:text="@string/separator" />
+            <TextView
+                android:id="@+id/dateOutView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-                <TextView
-                    android:id="@+id/dateOutView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_alignRight="@id/separatorView"
-                    android:textColor="#000000" />
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="20dp" />
 
         </LinearLayout>
 
@@ -84,104 +108,100 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/dateLinearLayout"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/roomNumberLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/roomNumber"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/roomNumberView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="right"
 
-                <TextView
-                    android:id="@+id/roomNumberLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/roomNumber" />
-
-                <TextView
-                    android:id="@+id/roomNumberView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/roomNumberLabel"
-                    android:layout_gravity="center"
-                    android:textColor="#000000" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/roomTypeLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/roomType" />
-
-                <TextView
-                    android:id="@+id/roomTypeView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/roomTypeLabel"
-                    android:layout_gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15dp"/>
-            </LinearLayout>
+                android:textSize="20dp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/roomTypeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/roomLinearLayout"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/roomTypeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/roomType"
+                android:textColor="#000"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/roomTypeView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/persRoomLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/roomLinearLayout"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_below="@+id/roomTypeLayout"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/nrPersLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="@string/nr_Persons"
+                android:textColor="#000"
+                android:textSize="20dp" />
 
-                <TextView
-                    android:id="@+id/nrPersLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/nr_Persons" />
-
-                <TextView
-                    android:id="@+id/roomPriceLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/nrPersLabel"
-                    android:text="@string/price" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/nrPersView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/nrPersView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/roomPriceView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/nrPersView"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15dp" />
-            </LinearLayout>
+                android:gravity="right"
+                android:textSize="20dp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/priceRoomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/persRoomLinearLayout"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/roomPriceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/price"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/roomPriceView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/colorAccent"
+                android:textSize="30dp" />
+        </LinearLayout>
+
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

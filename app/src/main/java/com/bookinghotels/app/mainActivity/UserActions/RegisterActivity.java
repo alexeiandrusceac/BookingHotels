@@ -52,6 +52,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         getSupportActionBar().hide();
 
+        userDBHelper = DataBaseHelper.getInstance(this);
+
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         nameInputValue = (TextInputEditText) findViewById(R.id.user_name_text);
         nameInputLayout = (TextInputLayout) findViewById(R.id.user_name_layout);
@@ -68,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         registerButton.setOnClickListener(this);
         valUserData = new ValidationUserInputData(compatActivity);
-        userDBHelper = DataBaseHelper.getInstance(this);
+
         userImage = (ImageView) findViewById(R.id.userImage);
         userData = new User();
         userImage.setOnClickListener(new View.OnClickListener() {

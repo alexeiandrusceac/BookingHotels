@@ -45,6 +45,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
@@ -85,16 +86,16 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         NavigationView.OnNavigationItemSelectedListener {
 
-    private static DataBaseHelper dbHelper;
+    private DataBaseHelper dbHelper;
     private static List<Hotels> listOfHotels;
     private FloatingActionButton floatingButton;
     private RecyclerHotelsAdapter adapter;
     private RecyclerView recHotelsView;
     private RecyclerView.LayoutManager layoutHotelsManager;
     public View postMainView;
-    public ImageView imageView;
+    private ImageView imageView;
     private Toolbar toolbar;
-
+    private String selectedCity;
     private DrawerLayout drawerLayout;
     protected FrameLayout frameLayout;
     private View view;
@@ -111,11 +112,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private static TextView user_email_text;
     private static ImageView nav_header_imageView;
     private View header;
-    private LinearLayout roomLabelLayout;
-    private Spinner roomType;
-    private TextView roomNumberText;
-    private EditText roomPriceText;
-    private LinearLayout linearLayout;
+
+    private Spinner citySpinner;
+
     private List<Rooms> listOfRooms = new ArrayList<>();
     private List<Rooms> dbListOfRooms = new ArrayList<>();
     private String name;
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frame);
-        listOfHotels = new ArrayList<>();
+
         /// Obtinerea datelor din Intent
         Bundle b = getIntent().getExtras();
         userEmail = b.getString("Email");
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         //https://github.com/thetonrifles/stackoverflow/tree/so-34848401
         layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        dbHelper =  DataBaseHelper.getInstance(this);
+        dbHelper = DataBaseHelper.getInstance(this);
 
         listOfHotels = dbHelper.getAllHotels();
         navigationView = (NavigationView) findViewById(R.id.navigationView);
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setupDrawer();
 
         view = layoutInflater.inflate(R.layout.main_content_activity, frameLayout);
-
+        listOfRooms = dbHelper.getAllRooms();
         toolbar = view.findViewById(R.id.main_app_toolbar);
         setSupportActionBar(toolbar);
 
@@ -172,8 +171,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 showFilterDialog(v);
             }
         });*/
-
-        dbListOfRooms = dbHelper.getAllRooms();
         session = new UserSession(getApplicationContext());
         session.checkLogin();
         userDetails = session.getUserDetails();
@@ -257,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         recHotelsView.setHasFixedSize(true);
         layoutHotelsManager = new LinearLayoutManager(MainActivity.this);
         recHotelsView.setLayoutManager(layoutHotelsManager);
-        adapter = new RecyclerHotelsAdapter(MainActivity.this, listOfHotels);
+        adapter = new RecyclerHotelsAdapter(MainActivity.this, listOfHotels, idUser);
         recHotelsView.setAdapter(adapter);
 
     }
@@ -279,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
+            imageView = postMainView.findViewById(R.id.imageViewPost);
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
 
@@ -287,14 +285,33 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void showPostDialog() {
         LayoutInflater layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         postMainView = layoutInflater.inflate(R.layout.post_main, null, false);
+        citySpinner = new Spinner(postMainView.getContext());
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //final Button imageLoader = postMainView.findViewById(R.id.buttonLoadPicturePost);
+
         final EditText hotelTitle = postMainView.findViewById(R.id.titleInputPost);
         final EditText hotelAddress = postMainView.findViewById(R.id.addressInputPost);
         final EditText hotelZip = postMainView.findViewById(R.id.zipInputPost);
         final EditText hotelPhone = postMainView.findViewById(R.id.phoneInputPost);
-        imageView  = (ImageView) postMainView.findViewById(R.id.imageViewPost);
-        roomLabelLayout = postMainView.findViewById(R.id.roomValueLayout);
+
+        citySpinner = postMainView.findViewById(R.id.cityInputPost);
+        imageView = (ImageView) postMainView.findViewById(R.id.imageViewPost);
+        //final EditText nrRoom = postMainView.findViewById(R.id.roomInputPost);
+        //roomLabelLayout = postMainView.findViewById(R.id.roomValueLayout);
+
+        //citySpinner = new Spinner(MainActivity.this);
+        citySpinner.setAdapter(new ArrayAdapter<Locality>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, Locality.values()
+        ));
+        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCity = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         imageView.setClickable(true);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -305,119 +322,89 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 startActivityForResult(intent, RESULT_LOAD_IMAGE);
             }
         });
-        new AlertDialog.Builder(MainActivity.this).setView(postMainView).setCancelable(false).setPositiveButton(
+
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this).setView(postMainView).setCancelable(false).setPositiveButton(
                 "Posteaza", new DialogInterface.OnClickListener() {
                     @SuppressLint("ResourceType")
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Hotels hotel = new Hotels();
-                        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                       // hotel.Id_Hotel  = listOfHotels.lastIndexOf(listOfHotels)+1;
-                        hotel.Id_AdminHotel = idUser;
-                        hotel.Id_RoomHotel = 1;//listOfRooms.lastIndexOf(listOfRooms) + 1;
-                        hotel.Title = hotelTitle.getText().toString();
-                        hotel.Address = hotelAddress.getText().toString();
-                        hotel.Image = baos.toByteArray();
-                        hotel.Phone = hotelPhone.getText().toString();
-                        hotel.Zip = hotelZip.getText().toString();
 
-                        for (int j = 0; j < roomLabelLayout.getChildCount(); j++) {
-                            Rooms room = new Rooms();
-                            LinearLayout linearLayout = (LinearLayout) roomLabelLayout.getChildAt(j);
-                            for (int i = 0; i < linearLayout.getChildCount(); i++) {
 
-                                View v = linearLayout.getChildAt(i);
-                                if (v.getId() > -1) {
-                                    if (v.getClass().equals(TextView.class)) {
-                                        room.RoomNumber = Integer.parseInt(((TextView) v).getText().toString());
-
-                                    } else if (v.getClass().equals(EditText.class)) {
-                                        room.RoomPrice = Integer.parseInt(((EditText) v).getText().toString());
-
-                                    } else if (v.getClass().equals(Spinner.class)) {
-                                        room.RoomType = ((Spinner) v).getSelectedItem().toString();
-                                        room.Id_Hotel = Integer.parseInt(String.valueOf(listOfHotels.lastIndexOf(listOfHotels) + 1));
-                                        listOfRooms.add(room);
-                                    }
-
-                                }
-                            }
-                        }
-                        dbHelper.insertPost(hotel);
-                        dbHelper.insertRooms(listOfRooms);
-                        listOfHotels.add(hotel);
-                        refreshHotelsData();
-                       // listOfHotels = dbHelper.getAllHotels();
                     }
                 }
         ).setNegativeButton("Anulare", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                dialog.cancel();
             }
-        }).show();
+        });
 
+        final AlertDialog ad = alertDialog.create();
+        ad.show();
+        ad.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onClick(View v) {
 
+                Hotels hotel = new Hotels();
+                /*if (TextUtils.isEmpty(nrRoom.getText().toString())) {
+                    Toast.makeText(MainActivity.this, "Introduceti numarul de camere!", Toast.LENGTH_SHORT).show();
+                    return;
+                }*/
 
+                Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 
+                hotel.Id_AdminHotel = idUser;
+                hotel.Title = hotelTitle.getText().toString();
+                hotel.Address = hotelAddress.getText().toString();
+                hotel.Image = baos.toByteArray();
+                hotel.Phone = hotelPhone.getText().toString();
+                hotel.Zip = hotelZip.getText().toString();
+                hotel.City = selectedCity;
+                 /* final  List<Rooms> ssdb = new ArrayList<>();
+                for (int j = 0; j < roomLabelLayout.getChildCount(); j++) {
+                    Rooms room = new Rooms();
+                    LinearLayout linearLayout = (LinearLayout) roomLabelLayout.getChildAt(j);
+                    for (int i = 0; i < linearLayout.getChildCount(); i++) {
+
+                        View view = linearLayout.getChildAt(i);
+                        if (view.getId() > -1) {
+                            if (view.getClass().equals(TextView.class)) {
+                                room.RoomNumber = Integer.parseInt(((TextView) view).getText().toString());
+
+                            } else if (view.getClass().equals(EditText.class)) {
+                                room.RoomPrice = Integer.parseInt(((EditText) view).getText().toString());
+
+                            } else if (view.getClass().equals(Spinner.class)) {
+                                room.RoomType = ((Spinner) view).getSelectedItem().toString();
+                                if (listOfHotels.size() == 0) {
+                                    room.Id_Hotel = 1;
+                                } else {
+                                    room.Id_Hotel = listOfHotels.size() + 1;
+                                }
+                                ssdb.add(room);
+                            }
+
+                        }
+                    }
+                }
+                dbHelper.insertRooms(ssdb);*/
+
+                 dbHelper.insertPost(hotel);
+
+                listOfHotels.add(hotel);
+               // listOfRooms = dbHelper.getAllRooms();
+                listOfHotels = dbHelper.getAllHotels();
+
+                refreshHotelsData();
+
+                ad.dismiss();
+            }
+        });
     }
 
-    public void onAddNumber(View v) {
-        EditText a = v.findViewById(R.id.roomInputPost);
-        int roomNumber = Integer.parseInt(a.getText().toString());
 
-        for (int i = 0; i < roomNumber; i++) {
-            a.setEnabled(false);
-            linearLayout = new LinearLayout(this);
-            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-            TextView roomLabel = new TextView(MainActivity.this);
-            roomNumberText = new TextView(MainActivity.this);
-            TextView priceLabel = new TextView(MainActivity.this);
-            roomPriceText = new EditText(MainActivity.this);
-            roomType = new Spinner(MainActivity.this);
-            roomType.setAdapter(new ArrayAdapter<TypeRoom>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, TypeRoom.values()
-            ));
-
-            roomLabel.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ((ViewGroup.MarginLayoutParams) roomLabel.getLayoutParams()).setMargins(14, 14, 0, 0);
-            roomLabel.setText("Cam.:");
-            roomLabel.setTextSize(17);
-            roomLabel.setTextColor(Color.BLACK);
-            linearLayout.addView(roomLabel);
-
-            roomNumberText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ((ViewGroup.MarginLayoutParams) roomNumberText.getLayoutParams()).setMargins(14, 14, 0, 0);
-            roomNumberText.setText(String.valueOf((listOfHotels.size() + 1) + "0" + i));
-            roomNumberText.setTextSize(17);
-            roomNumberText.setId(i);
-            linearLayout.addView(roomNumberText);
-
-            priceLabel.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ((ViewGroup.MarginLayoutParams) priceLabel.getLayoutParams()).setMargins(14, 14, 0, 0);
-            priceLabel.setGravity(Gravity.CENTER);
-            priceLabel.setText("pretul:");
-            priceLabel.setTextSize(17);
-            priceLabel.setTextColor(Color.BLACK);
-            linearLayout.addView(priceLabel);
-
-            roomPriceText.setLayoutParams(new LinearLayout.LayoutParams(250, ViewGroup.LayoutParams.WRAP_CONTENT));
-            roomPriceText.setTextSize(17);
-            roomPriceText.setId(i + 1);
-            roomPriceText.setInputType(InputType.TYPE_CLASS_NUMBER);
-            linearLayout.addView(roomPriceText);
-
-            roomType.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            roomType.setId(i + 2);
-            ((ViewGroup.MarginLayoutParams) roomType.getLayoutParams()).setMargins(14, 14, 0, 0);
-            linearLayout.addView(roomType);
-
-            roomLabelLayout.addView(linearLayout);
-
-        }
-
-    }
 
     /*private void showFilterDialog(View view) {
 

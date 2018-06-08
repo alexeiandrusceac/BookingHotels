@@ -46,7 +46,7 @@ public class RecyclerPostAdapter extends RecyclerView.Adapter<RecyclerPostAdapte
         holder.hotelAddress.setText(postList.get(position).Address);
         holder.hotelZip.setText(postList.get(position).Zip);
         holder.hotelRating.setText(String.valueOf(postList.get(position).Rating));
-        holder.imageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(byteArray,0,byteArray.length),holder.imageView.getWidth(),holder.imageView.getHeight(),false));
+        holder.imageView.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
         holder.hotelPhone.setText(postList.get(position).Phone);
     }
 

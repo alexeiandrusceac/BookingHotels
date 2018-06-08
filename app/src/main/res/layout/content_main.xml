@@ -82,6 +82,10 @@
                     android:layout_alignLeft="@id/titleLabel"
                     android:layout_below="@id/titleLabel"
                     android:textColor="#808080" />
+                <TextView android:id="@+id/idView"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"/>
 
                 <TextView
                     android:id="@+id/ratingLabel"
@@ -126,23 +130,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-               <!-- <TextView
-                    android:id="@+id/priceLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/addressView"
-                    android:layout_below="@+id/addressView"
-                    android:text="@string/price"
-                    android:textColor="#000000"
-                    android:textSize="16dp" />
-
-                <TextView
-                    android:id="@+id/priceView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/priceLabel"
-                    android:layout_below="@id/priceLabel"
-                    android:textColor="#808080" />-->
 
                 <TextView
                     android:id="@+id/phoneLabel"
@@ -179,7 +166,24 @@
                     android:layout_alignLeft="@id/zipLabel"
                     android:layout_below="@id/zipLabel"
                     android:textColor="#808080" />
+                <TextView
+                    android:id="@+id/cityLabel"
+                    android:layout_width="wrap_content"
+                    android:text="@string/city"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/zipView"
+                    android:layout_below="@id/zipView"
+                    android:textColor="#000000"/>
+                <TextView
+                    android:id="@+id/cityView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/cityLabel"
+                    android:layout_below="@id/cityLabel"
+                    android:textColor="#808080"/>
+
             </LinearLayout>
+
         </LinearLayout>
 
     </RelativeLayout>

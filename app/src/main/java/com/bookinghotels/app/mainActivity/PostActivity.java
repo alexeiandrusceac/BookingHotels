@@ -63,12 +63,14 @@ public class PostActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frame);
         Bundle b = getIntent().getExtras();
+        postHelper =  DataBaseHelper.getInstance(this);
+
         userEmail = b.getString("Email");
         userImage = b.getByteArray("Image");
         idUser = b.getInt("Id");
         layoutPostsInflater = (LayoutInflater)PostActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         framePostLayout = (FrameLayout)findViewById(R.id.content_frame);
-        postHelper = new DataBaseHelper(PostActivity.this);
+
         listOfPosts = postHelper.getHotels(idUser);
         navigationPostView = (NavigationView)findViewById(R.id.navigationView);
         navigationPostView.setNavigationItemSelectedListener(this);

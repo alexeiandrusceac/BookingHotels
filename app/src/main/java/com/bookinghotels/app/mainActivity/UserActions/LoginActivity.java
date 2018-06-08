@@ -34,7 +34,6 @@ private ValidationUserInputData valUserInput;
 private DataBaseHelper userDBHelper;
 private AppBarLayout appBarLayout;
 private Toolbar loginToolbar;
-private DataBaseHelper usrHelper;
 
     UserSession session;
 
@@ -44,9 +43,10 @@ private DataBaseHelper usrHelper;
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-// User Session Manager
+        userDBHelper = DataBaseHelper.getInstance(this);
+        //DataBaseHelper.getInstance(this).getAllHotels();
+        // User Session Manager
         session = new UserSession(getApplicationContext());
-
         getSupportActionBar().hide();
         ///Initializarea obiectelor din activity
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
@@ -61,7 +61,7 @@ private DataBaseHelper usrHelper;
         loginButton.setOnClickListener(this);
         registerLink.setOnClickListener(this);
 
-        userDBHelper = DataBaseHelper.getInstance(this);
+
         valUserInput = new ValidationUserInputData(compatActivity);
 
     }
